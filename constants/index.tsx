@@ -6,7 +6,7 @@ export const navLinks = [
   {
     label: 'Home',
     route: '/',
-    icon: <Home  className='mr-2 h-4 w-4' />
+    icon: <Home  className='h-4 w-4' />
   },
   {
     label: 'Products',

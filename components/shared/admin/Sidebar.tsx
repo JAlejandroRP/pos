@@ -28,7 +28,12 @@ const Sidebar = () => {
                       className={`flex p-16-semibold size-full gap-4 p-4 ${isActive ? 'underline text-gray-400' : ''}`}
                       href={link.route}
                     >
-                      {link.icon}{link.label}
+                      <>
+                        <div className='my-auto'>
+                          {link.icon}
+                        </div>
+                        {link.label}
+                      </>
                     </Link>
                   </li>
                 )
