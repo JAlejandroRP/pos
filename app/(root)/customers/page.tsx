@@ -2,18 +2,17 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React from 'react'
 
-const ProductsPage = () => {
-
+const CustomersPage = () => {
   return (
     <div className='w-full flex justify-between'>
-      ProductsPage
-      <Link href='/products/add' passHref>
-        <Button role='a'>
-          Add New Product
+      CustomersPage
+      <Link href={'/customers/add'}>
+        <Button>
+          Add New Customer
         </Button>
       </Link>
     </div>
   )
 }
 
-export default ProductsPage
+export default CustomersPage
