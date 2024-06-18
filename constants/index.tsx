@@ -2,7 +2,7 @@ import { Home } from 'lucide-react';
 import { Box } from 'lucide-react';
 import { User } from 'lucide-react';
 
-export const navLinks = [
+export const adminNavLinks = [
   {
     label: 'Home',
     route: '/',
@@ -11,11 +11,28 @@ export const navLinks = [
   {
     label: 'Products',
     route: '/products',
-    icon: <Box  className='mr-2 h-4 w-4' />
+    icon: <Box  className='h-4 w-4' />
   },
   {
     label: 'Profile',
     route: '/profile',
-    icon: <User  className='mr-2 h-4 w-4' />
+    icon: <User  className='h-4 w-4' />
   },
+]
+
+export const AddProductDefaultValues = {
+  name: '',
+  image: '',
+  price: 0,
+  initial_stock: '',
+  category: '',
+  details: ''
+}
+
+export const ItemsCategories = [
+  'Clothing',
+  'Electronics',
+  'Sports',
+  'Toys',
+  'Home',
 ]

@@ -1,6 +1,6 @@
 "use client";
 
-import { navLinks } from '@/constants';
+import { adminNavLinks } from '@/constants';
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
@@ -18,7 +18,7 @@ const Sidebar = () => {
         <nav className='h-full flex-col justify-between md:flex md:gap-4'>
           <SignedIn>
             <ul className="">
-              {navLinks.map(link => {
+              {adminNavLinks.map(link => {
                 const isActive = link.route === pathname;
                 return (
                   <li
@@ -46,7 +46,7 @@ const Sidebar = () => {
             </ul>
           </SignedIn>
           <SignedOut>
-            <Button asChild className=''>
+            <Button className=''>
               <Link href='/sign-in'>Sign In</Link>
             </Button>
           </SignedOut>

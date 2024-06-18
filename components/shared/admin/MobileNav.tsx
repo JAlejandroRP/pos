@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import { Menu } from 'lucide-react';
-import { navLinks } from '@/constants';
+import { adminNavLinks } from '@/constants';
 
 const MobileNav = () => {
   const pathname = usePathname();
@@ -28,14 +28,14 @@ const MobileNav = () => {
               <>
                 <a href="#">LOGO</a>
                 <ul className='mt-8 flex w-full flex-col items-start gap-5'>
-                  {navLinks.map((link) => {
+                  {adminNavLinks.map((link) => {
                     const isActive = link.route === pathname;
 
                     return (
                       <li key={link.route}
                         className='p-18 flex whitespace-nowrap text-dark-700'
                       >
-                        <SheetClose asChild>
+                        <SheetClose>
                           <Link
                             className='p-16-semibold flex size-full gap-4 p-4'
                             href={link.route}>
