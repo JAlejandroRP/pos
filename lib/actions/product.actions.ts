@@ -3,52 +3,65 @@
 import { revalidatePath } from "next/cache";
 
 import { User } from "../database/models/user.model";
+import { Product } from "../database/models/product.model";
 import { connectToDatabase } from "../database/mongodb";
-import { ObjectId } from "mongodb";
 
 // CREATE
-export async function createUser(user: CreateUserParams) {
+export async function createProduct(product: AddProductParams) {
   try {
-    user.role = 'client';
     const db = await connectToDatabase();
-    const collection = db.collection('users')
+    const collection = db.collection('products')
 
-    collection.insertOne(user)
+    collection.insertOne(product)
 
-    return JSON.parse(JSON.stringify(user));
+    return JSON.parse(JSON.stringify(product));
   } catch (error) {
     console.log(error);
   }
 }
 
-//READ
-export async function getUserByClerkId(userClerkId: string) {
+// READ
+export async function getAllProducts() {
   try {
     const db = await connectToDatabase();
+    const collection = db.collection('products');
 
-    const user = await db.collection('users').findOne({ clerkId: userClerkId });
-
-    if (!user) throw new Error("User not found");
-
-    return JSON.parse(JSON.stringify(user));
+    const products = await collection.find<Product>({}).toArray();
+    
+    return JSON.parse(JSON.stringify(products));
   } catch (error) {
     console.log(error);
   }
 }
 
-export async function getUserByMongoId(userId: string) {
-  try {
-    const db = await connectToDatabase();
+// READ
+// export async function getUserByClerkId(userClerkId: string) {
+//   try {
+//     await connectToDatabase();
 
-    const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+//     const user = await User.findOne({ clerkId: userClerkId });
 
-    if (!user) throw new Error("User not found");
+//     if (!user) throw new Error("User not found");
 
-    return JSON.parse(JSON.stringify(user));
-  } catch (error) {
-    console.log(error);
-  }
-}
+//     return JSON.parse(JSON.stringify(user));
+//   } catch (error) {
+//     handleError(error);
+//   }
+// }
+
+// export async function getUserByMongoId(userId: string) {
+//   try {
+//     await connectToDatabase();
+
+//     const user = await User.findById(userId);
+
+//     if (!user) throw new Error("User not found");
+
+//     return JSON.parse(JSON.stringify(user));
+//   } catch (error) {
+//     handleError(error);
+//   }
+// }
 
 // // UPDATE
 // export async function updateUser(clerkId: string, user: UpdateUserParams) {

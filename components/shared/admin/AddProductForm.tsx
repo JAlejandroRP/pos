@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { AddProductDefaultValues, ItemsCategories } from '@/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react'
+import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
 import { CustomField } from '../CustomField';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,8 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";
+import { createProduct } from '@/lib/actions/product.actions';
+import { useToast } from '@/components/ui/use-toast';
 
 export const addProductFormSchema = z.object({
   name: z.string().min(1, "Must enter a name"),
@@ -29,6 +31,8 @@ export const addProductFormSchema = z.object({
 const AddProductForm = (
   // productData?: AddProductParams
 ) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const initialValues = {
     name: '',
     image: '',
@@ -44,7 +48,26 @@ const AddProductForm = (
   })
 
   const onSubmit = async (values: z.infer<typeof addProductFormSchema>) => {
-    console.log(values);
+    setIsSubmitting(true);
+    try {
+      const newProduct = await createProduct(values);
+      toast({
+        title: "Product created!",
+        description: "You now can see the product.",
+        duration: 5000,
+        className: "success-toast",
+      });
+
+    } catch (error) {
+      toast({
+        title: 'Something went wrong while uploading',
+        description: 'Please try again',
+        duration: 5000,
+        className: 'error-toast'
+      })
+    }
+
+    setIsSubmitting(false)
   }
 
   return (
@@ -88,7 +111,7 @@ const AddProductForm = (
               />
 
             </div>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-3 gap-6 mb-6">
               <CustomField
                 control={form.control}
                 name='price'
@@ -157,15 +180,15 @@ const AddProductForm = (
                         {ItemsCategories.map((category) => (
                           <SelectItem key={category} value={category}>{category}</SelectItem>
                         ))}
-                      {/* </SelectGroup> */}
-                    </SelectContent>
-                  </Select>
+                        {/* </SelectGroup> */}
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />
 
-          </div>
-          <CustomField
+            </div>
+            <CustomField
               control={form.control}
               name='details'
               formLabel='Aditional Details'
@@ -174,14 +197,14 @@ const AddProductForm = (
                 <Textarea {...field} placeholder='Enter product description, SKU, tags, etc.' />
               }
             />
-        </CardContent>
-        <CardFooter>
-          <Button className='ml-auto' type='submit'>
-            Save Product
-          </Button>
-        </CardFooter>
-      </form>
-    </Form>
+          </CardContent>
+          <CardFooter>
+            <Button className='ml-auto' type='submit'>
+              Save Product
+            </Button>
+          </CardFooter>
+        </form>
+      </Form>
     </Card >
   )
 }

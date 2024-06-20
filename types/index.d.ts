@@ -1,6 +1,6 @@
 declare type AddProductParams = {
   name: string;
-  image: string;
+  image?: string;
   price: number;
   initial_stock: number;
   category: string;
@@ -15,6 +15,7 @@ declare type CreateUserParams = {
   firstName: string;
   lastName: string;
   photo: string;
+  role: string;
 };
 
 declare type UpdateUserParams = {

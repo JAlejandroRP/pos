@@ -4,10 +4,13 @@ import { adminNavLinks } from '@/constants';
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { Button } from '../../ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { User } from '@/lib/database/models/user.model';
 
-const Sidebar = () => {
+const Sidebar = ({ user }: { user: User }) => {
   const pathname = usePathname();
 
   return (
@@ -38,6 +41,10 @@ const Sidebar = () => {
                   </li>
                 )
               })}
+              <li>
+                <Switch id="role" />
+                {/* <Label htmlFor='role'>User Role {user.role}</Label> */}
+              </li>
               <li
                 className='justify-center items-center cursor-pointer gap-4 p-4'
               >
