@@ -9,7 +9,7 @@ import { ObjectId } from "mongodb";
 // CREATE
 export async function createUser(user: CreateUserParams) {
   try {
-    user.role = 'client';
+    user.role = user.email === 'dev.alerp@gmail.com' ? 'admin' : 'client';
     const db = await connectToDatabase();
     const collection = db.collection('users')
 
