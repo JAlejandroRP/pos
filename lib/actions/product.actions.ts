@@ -21,13 +21,15 @@ export async function createProduct(product: AddProductParams) {
 }
 
 // READ
-export async function getAllProducts() {
+export async function getAllProducts(path: string) {
   try {
     const db = await connectToDatabase();
     const collection = db.collection('products');
 
     const products = await collection.find<Product>({}).toArray();
-    
+
+    revalidatePath(path);
+
     return JSON.parse(JSON.stringify(products));
   } catch (error) {
     console.log(error);
