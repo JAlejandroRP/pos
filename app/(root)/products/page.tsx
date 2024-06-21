@@ -3,11 +3,11 @@ import { Button } from '@/components/ui/button'
 import { getAllProducts } from '@/lib/actions/product.actions'
 import Link from 'next/link'
 import React from 'react'
-import { usePathname } from 'next/navigation'
+// import { usePathname } from 'next/navigation'
 
 const ProductsPage = async () => {
-  const pathname = usePathname();
-  const products = await getAllProducts(pathname);
+  // const pathname = usePathname();
+  const products = await getAllProducts('/products/');
 
   return (
     <div className='w-full'>
