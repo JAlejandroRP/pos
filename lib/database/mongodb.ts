@@ -17,7 +17,7 @@ if (!cached) {
 }
 
 export const connectToDatabase = async (): Promise<Db> => {
-  if (cached.db) return cached.db;
+  if (cached.db && cached.db.databaseName === process.env.DB_NAME) return cached.db;
 
   if (!process.env.MONGODB_URL) throw new Error('Missing MONGODB_URL');
 
