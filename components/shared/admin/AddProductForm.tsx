@@ -89,11 +89,11 @@ const AddProductForm = (
               <CustomField
                 control={form.control}
                 name='image'
-                formLabel='Product Image'
+                formLabel='Product Image Url'
                 className='w-full'
                 render={({ field }) =>
                   <Input
-                    type='file'
+                    type='text'
                     {...field}
                   />
                 }

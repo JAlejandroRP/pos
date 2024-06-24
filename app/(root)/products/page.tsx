@@ -1,26 +1,21 @@
-import ProductsTable from '@/components/shared/admin/ProductsTable'
-import { Button } from '@/components/ui/button'
+import ProductCard from '@/components/shared/client/ProductCard';
 import { getAllProducts } from '@/lib/actions/product.actions'
-import Link from 'next/link'
 import React from 'react'
 
+
 const ProductsPage = async () => {
-  const products = await getAllProducts('/products/');
+  const products = await getAllProducts('/products');
+
 
   return (
-    <div className='w-full'>
-      <div className='flex justify-between'>
-        <h1>Products Page</h1>
-        <Link href='/products/add' passHref>
-          <Button role='a'>
-            Add New Product
-          </Button>
-        </Link>
+    <section>
+      <div>ProductsPage</div>
+      <div
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+      >
+        {products.map(product => <ProductCard product={product} />)}
       </div>
-      <div className='mt-8'>
-        {products && <ProductsTable products={products} />}
-      </div>
-    </div>
+    </section>
   )
 }
 

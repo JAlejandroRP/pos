@@ -21,7 +21,7 @@ export async function createProduct(product: AddProductParams) {
 }
 
 // READ
-export async function getAllProducts(path: string) {
+export async function getAllProducts(path: string):Promise<Product[] | []> {
   try {
     const db = await connectToDatabase();
     const collection = db.collection('products');
@@ -33,6 +33,7 @@ export async function getAllProducts(path: string) {
     return JSON.parse(JSON.stringify(products));
   } catch (error) {
     console.log(error);
+    return []
   }
 }
 

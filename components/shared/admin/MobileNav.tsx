@@ -5,9 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import { Menu } from 'lucide-react';
-import { adminNavLinks } from '@/constants';
+import { navLinks } from '@/constants';
+import { User } from '@/lib/database/models/user.model';
 
-const MobileNav = () => {
+const MobileNav = ({ user }: { user: User }) => {
   const pathname = usePathname();
   return (
     <header className='flex justify-between items-center fixed h-16 w-full border-b-4 bg-white p-5 lg:hidden'>
@@ -28,7 +29,7 @@ const MobileNav = () => {
               <>
                 <a href="#">LOGO</a>
                 <ul className='mt-8 flex w-full flex-col items-start gap-5'>
-                  {adminNavLinks.map((link) => {
+                  {navLinks.customer.map((link) => {
                     const isActive = link.route === pathname;
 
                     return (
