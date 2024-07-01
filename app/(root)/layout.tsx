@@ -8,7 +8,7 @@ import React from 'react'
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getClerkCurrentUser();
 
-  if(!user) redirect('/');
+  if(!user) redirect('/sign-in');
 
   return (
     <main className="flex min-h-screen w-full flex-col bg-white lg:flex-row">
