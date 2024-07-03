@@ -18,6 +18,15 @@ declare type CreateUserParams = {
   role?: string;
 };
 
+declare type CreateClerkUserParams = {
+  name: string;
+  birthday: string;
+  sex: string;
+  email: string;
+  phone: string;
+  direction?: string;
+}
+
 declare type UpdateUserParams = {
   firstName: string;
   lastName: string;

@@ -6,18 +6,25 @@ import { clerkClient } from "@clerk/clerk-sdk-node";
 
 // CREATE
 export async function createClerkUser(
-  // user: CreateUserParams
+  user: CreateClerkUserParams
 ) {
   try {
-    const users = await clerkClient.users.getUserList()
-    // user.role = user.email === 'dev.alerp@gmail.com' ? 'admin' : 'client';
-    // const db = await connectToDatabase();
-    // const collection = db.collection('users')
-
-    // collection.insertOne(user)
-
-    console.log(users);
+    const username = user.email.substring(
+      0,
+      user.email.indexOf('@')
+    )
+    console.log(username);
     
+    const users = await clerkClient.users.createUser({
+      emailAddress: [user.email],
+      firstName: user.name,
+      // username: username,
+      // phoneNumber: [user.phone],
+      password: 'A274558l#.',
+      privateMetadata: { role: 'client' },
+      createdAt: new Date(),
+    })
+    console.log(users);
 
     return JSON.parse(JSON.stringify(users));
   } catch (error) {

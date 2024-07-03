@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";
 import { useToast } from '@/components/ui/use-toast';
+import { createClerkUser } from '@/lib/actions/user.actions';
 
 export const addCustomerFormSchema = z.object({
   name: z.string().min(1, { message: "Must enter a name" }).max(50, { message: "Name can't be longer than 50 characters" }),
@@ -44,15 +45,14 @@ const AddClientForm = (
   })
 
   const onSubmit = async (values: z.infer<typeof addCustomerFormSchema>) => {
-    console.log(values);
     setIsSubmitting(true);
     try {
-      // const newProduct = await createProduct(values);
-      console.log(values);
+      const newCustomer = await createClerkUser(values);
+      console.log(newCustomer);
 
       toast({
-        title: "Product created!",
-        description: "You now can see the product.",
+        title: "Customer created!",
+        description: "You now can see the new customer.",
         duration: 5000,
         className: "success-toast",
       });
