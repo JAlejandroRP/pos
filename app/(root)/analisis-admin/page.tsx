@@ -4,16 +4,16 @@ import { getAllProducts } from '@/lib/actions/product.actions'
 import Link from 'next/link'
 import React from 'react'
 
-const ProductsAdminPage = async () => {
+const AnalisisAdminPage = async () => {
   const products = await getAllProducts('/products/');
 
   return (
     <div className='w-full'>
       <div className='flex justify-between'>
-        <h1>Products Admin Page</h1>
+        <h1>Analisis Admin Page</h1>
         <Link href='/products-admin/add' passHref>
           <Button role='a'>
-            Add New Product
+            Add New Analisis
           </Button>
         </Link>
       </div>
@@ -24,4 +24,4 @@ const ProductsAdminPage = async () => {
   )
 }
 
-export default ProductsAdminPage
+export default AnalisisAdminPage
