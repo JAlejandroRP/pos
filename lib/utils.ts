@@ -21,3 +21,16 @@ export async function getClerkCurrentUser() {
     throw error
   }
 }
+
+export function createUsername(name: string) {
+  const username = name.trim().replaceAll(' ', '_')
+  // ret
+}
+
+export function parseClerkApiError(error: ClerkApiError) {
+  if(!error.clerkError) throw error
+
+  const errors = error.errors?.map((error) => error.longMessage).join(', ');
+
+  return errors;
+}

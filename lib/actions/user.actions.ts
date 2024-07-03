@@ -3,37 +3,39 @@
 import { connectToDatabase } from "../database/mongodb";
 import { ObjectId } from "mongodb";
 import { clerkClient } from "@clerk/clerk-sdk-node";
+import { parseClerkApiError } from "../utils";
 
 // CREATE
 export async function createClerkUser(
   user: CreateClerkUserParams
 ) {
   try {
-    const username = user.email.substring(
-      0,
-      user.email.indexOf('@')
-    )
-    console.log(username);
-    
-    const users = await clerkClient.users.createUser({
-      emailAddress: [user.email],
+    const newClerkUser = await clerkClient.users.createUser({
       firstName: user.name,
-      // username: username,
-      // phoneNumber: [user.phone],
-      password: 'A274558l#.',
+      phoneNumber: ['+52' + user.phone],
+      password: process.env.CLERK_DEFAULT_PASSWORD || '@analisis321',
       privateMetadata: { role: 'client' },
       createdAt: new Date(),
     })
-    console.log(users);
 
-    return JSON.parse(JSON.stringify(users));
-  } catch (error) {
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(newClerkUser))
+    }
+  } catch (error: any) {
     console.log(error);
+    if (error.clerkError) {
+      return {
+        sucess: false, 
+        error: parseClerkApiError(error)
+      }
+    }
+    throw error
   }
 }
 
 // CREATE
-export async function createUser(user: CreateUserParams) {
+export async function createMongoDbUser(user: CreateMongoDbUserParams) {
   try {
     user.role = user.email === 'dev.alerp@gmail.com' ? 'admin' : 'client';
     const db = await connectToDatabase();

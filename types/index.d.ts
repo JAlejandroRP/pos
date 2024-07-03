@@ -8,21 +8,23 @@ declare type AddProductParams = {
 }
 
 // ====== USER PARAMS
-declare type CreateUserParams = {
+declare type CreateMongoDbUserParams = {
   clerkId: string;
-  email: string;
-  username: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   photo: string;
-  role?: string;
+  role: string;
+  phone: string;
+  sex: string;
+  birthday: string;
+  direction?: string;
+  email?: string;
 };
 
 declare type CreateClerkUserParams = {
   name: string;
   birthday: string;
   sex: string;
-  email: string;
+  email?: string | null;
   phone: string;
   direction?: string;
 }
@@ -33,3 +35,17 @@ declare type UpdateUserParams = {
   username: string;
   photo: string;
 };
+
+declare type ClerkApiError = {
+  status?: number,
+  clerkTraceId?: string,
+  clerkError?: boolean,
+  errors?: [
+    {
+      code?: string,
+      message?: string,
+      longMessage?: string,
+      meta?: object
+    }
+  ]
+}

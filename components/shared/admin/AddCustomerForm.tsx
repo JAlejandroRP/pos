@@ -12,15 +12,22 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";
 import { useToast } from '@/components/ui/use-toast';
-import { createClerkUser } from '@/lib/actions/user.actions';
+import { createClerkUser, createMongoDbUser } from '@/lib/actions/user.actions';
 
 export const addCustomerFormSchema = z.object({
   name: z.string().min(1, { message: "Must enter a name" }).max(50, { message: "Name can't be longer than 50 characters" }),
   birthday: z.string().refine((val) => !isNaN(Date.parse(val)), { message: "Must enter a valid date" }),
   sex: z.enum(["M", "F"], { message: "Must select either 'M' or 'F'" }),
-  email: z.string().email({ message: "Must enter a valid email" }),
-  phone: z.string().min(10, { message: "Phone number must be at least 10 digits" }).max(15, { message: "Phone number can't be longer than 15 digits" }).regex(/^[0-9]+$/, { message: "Phone number must contain only digits" }),
-  direction: z.string().min(1, { message: "Must enter a direction" }).optional(),
+  email: z.string()
+    .optional()
+    .transform(e => e === '' ? undefined : e)
+    .refine(e => e === undefined || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e), { message: "Must enter a valid email" }),
+
+  // email: z.string().email('Must enter a valid email').transform(e => e==='' ? undefined : e).nullable(),
+  // .email({ message: "Must enter a valid email" })
+  // .nullable(), // Permite que sea nulo después de la transformación
+  phone: z.string().min(10, { message: "Phone number must be at least 10 digits" }).max(10, { message: "Phone number can't be longer than 10 digits" }).regex(/^[0-9]+$/, { message: "Phone number must contain only digits" }),
+  direction: z.string().min(0, { message: "Must enter a direction" }).optional(),
 })
 
 type AddCustomerFormValues = z.infer<typeof addCustomerFormSchema>;
@@ -47,23 +54,42 @@ const AddClientForm = (
   const onSubmit = async (values: z.infer<typeof addCustomerFormSchema>) => {
     setIsSubmitting(true);
     try {
-      const newCustomer = await createClerkUser(values);
-      console.log(newCustomer);
+      const createClerkUserResponse = await createClerkUser(values);
 
-      toast({
-        title: "Customer created!",
-        description: "You now can see the new customer.",
-        duration: 5000,
-        className: "success-toast",
-      });
+      if (createClerkUserResponse.error) {
+        toast({
+          title: 'Something went wrong',
+          description: createClerkUserResponse.error,
+          duration: 5000,
+          className: 'error-toast',
+          variant: 'destructive'
+        })
+      }
+      else {
+        const userToMongo = {
+          ...values,
+          clerkId: createClerkUserResponse.data.id,
+          photo: createClerkUserResponse.data.imageUrl,
+          role: createClerkUserResponse.data.privateMetadata.role
+        }
+        const createMongoUser = await createMongoDbUser(userToMongo)
 
+        toast({
+          title: "Customer created!",
+          description: "You now can see the new customer.",
+          duration: 5000,
+          className: "success-toast",
+        });
+      }
     } catch (error) {
       toast({
-        title: 'Something went wrong while uploading',
+        title: 'Something went wrong',
         description: 'Please try again',
         duration: 5000,
-        className: 'error-toast'
+        className: 'error-toast',
+        variant: 'destructive'
       })
+      console.log(error);
     }
 
     setIsSubmitting(false)
@@ -152,7 +178,7 @@ const AddClientForm = (
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                     className="flex flex-col"
-                    // className="flex flex-row h-10 justify-between items-center px-10"
+                  // className="flex flex-row h-10 justify-between items-center px-10"
                   >
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>

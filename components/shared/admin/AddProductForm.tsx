@@ -65,7 +65,8 @@ const AddProductForm = (
         title: 'Something went wrong while uploading',
         description: 'Please try again',
         duration: 5000,
-        className: 'error-toast'
+        className: 'error-toast',
+        variant: 'destructive'
       })
     }
 
