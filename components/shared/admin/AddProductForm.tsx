@@ -28,12 +28,14 @@ export const addProductFormSchema = z.object({
   details: z.string().optional()
 })
 
+type AddProductFormValues = z.infer<typeof addProductFormSchema>;
+
 const AddProductForm = (
   // productData?: AddProductParams
 ) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const initialValues = {
+  const initialValues:AddProductFormValues = {
     name: '',
     image: '',
     price: 0,

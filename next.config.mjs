@@ -5,6 +5,11 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'opticaexpress.hn',
+        port: ''
+      },
+      {
+        protocol: 'https',
         hostname: 'fakestoreapi.com',
         port: ''
       }

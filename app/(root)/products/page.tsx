@@ -9,7 +9,11 @@ const ProductsPage = async () => {
 
   return (
     <section>
-      <div>ProductsPage</div>
+      <div>
+        <h2 className="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
+          Products
+        </h2>
+      </div>
       <div
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
       >

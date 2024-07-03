@@ -1,10 +1,29 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
-import { User } from "../database/models/user.model";
 import { connectToDatabase } from "../database/mongodb";
 import { ObjectId } from "mongodb";
+import { clerkClient } from "@clerk/clerk-sdk-node";
+
+// CREATE
+export async function createClerkUser(
+  // user: CreateUserParams
+) {
+  try {
+    const users = await clerkClient.users.getUserList()
+    // user.role = user.email === 'dev.alerp@gmail.com' ? 'admin' : 'client';
+    // const db = await connectToDatabase();
+    // const collection = db.collection('users')
+
+    // collection.insertOne(user)
+
+    console.log(users);
+    
+
+    return JSON.parse(JSON.stringify(users));
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 // CREATE
 export async function createUser(user: CreateUserParams) {

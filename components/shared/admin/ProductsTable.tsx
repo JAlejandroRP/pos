@@ -4,10 +4,12 @@ import { Product } from '@/lib/database/models/product.model'
 import { DataTable } from '@/components/ui/data-table'
 
 export const columns: ColumnDef<Product>[] = [
-  {
-    accessorKey: "image",
-    header: "Image",
-  },
+  // {
+  //   accessorKey: "image",
+  //   header: "Image",
+  //   enableResizing: true,
+  //   size:200
+  // },
   {
     accessorKey: "name",
     header: "Name",

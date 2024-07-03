@@ -30,22 +30,25 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
+  console.log(table.getHeaderGroups());
 
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
+            <TableRow key={headerGroup.id}
+              className="max-w-12"
+            >
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                    {
+                      flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )
+                    }
                   </TableHead>
                 )
               })}
