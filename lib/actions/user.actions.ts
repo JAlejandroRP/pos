@@ -26,7 +26,7 @@ export async function createClerkUser(
     console.log(error);
     if (error.clerkError) {
       return {
-        sucess: false, 
+        sucess: false,
         error: parseClerkApiError(error)
       }
     }
@@ -73,6 +73,20 @@ export async function getUserByMongoId(userId: string) {
     if (!user) throw new Error("User not found");
 
     return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getAllCustomersMongoDb() {
+  try {
+    const db = await connectToDatabase();
+
+    const users = await db.collection('users').find({ role: "client" }).toArray();
+
+    if (!users) return []
+
+    return JSON.parse(JSON.stringify(users));
   } catch (error) {
     console.log(error);
   }

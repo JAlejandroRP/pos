@@ -1,9 +1,11 @@
 export type User = {
-  clerkId: string,
-  email: string,
-  username: string,
-  photo?: string,
-  firstName?: string,
-  lastName?: string,
-  role: string,
+  clerkId: string;
+  name: string;
+  photo: string;
+  role: string;
+  phone: string;
+  sex: string;
+  birthday: string;
+  direction?: string;
+  email?: string;
 }

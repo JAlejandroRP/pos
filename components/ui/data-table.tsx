@@ -30,7 +30,7 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
   })
-  console.log(table.getHeaderGroups());
+  // console.log(table.getHeaderGroups());
 
   return (
     <div className="rounded-md border">
