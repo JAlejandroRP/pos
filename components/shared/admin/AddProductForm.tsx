@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";
-import { createProduct } from '@/lib/actions/product.actions';
+// import { createProduct } from '@/lib/actions/product.actions';
 import { useToast } from '@/components/ui/use-toast';
 
 export const addProductFormSchema = z.object({
@@ -52,7 +52,7 @@ const AddProductForm = (
   const onSubmit = async (values: z.infer<typeof addProductFormSchema>) => {
     setIsSubmitting(true);
     try {
-      const newProduct = await createProduct(values);
+      // const newProduct = await createProduct(values);
       toast({
         title: "Product created!",
         description: "You now can see the product.",

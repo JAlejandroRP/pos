@@ -1,10 +1,10 @@
-import AddProductForm from '@/components/shared/admin/AddProductForm'
+import AddAnalisisForm from '@/components/shared/admin/AddAnalisisForm'
 import React from 'react'
 
 const AddProductPage = () => {
   return (
     <>
-      <AddProductForm
+      <AddAnalisisForm
       />
     </>
   )

@@ -3,34 +3,34 @@
 import { revalidatePath } from "next/cache";
 
 import { User } from "../database/models/user.model";
-import { Product } from "../database/models/product.model";
+import { Analisis, AnalisisWithId } from "../database/models/analisis.model";
 import { connectToDatabase } from "../database/mongodb";
 
 // CREATE
-export async function createProduct(product: AddProductParams) {
+export async function addAnalisis(analisis: Analisis) {
   try {
     const db = await connectToDatabase();
-    const collection = db.collection('products')
+    const collection = db.collection('analisis')
 
-    collection.insertOne(product)
+    collection.insertOne(analisis)
 
-    return JSON.parse(JSON.stringify(product));
+    return JSON.parse(JSON.stringify(analisis));
   } catch (error) {
     console.log(error);
   }
 }
 
 // READ
-export async function getAllProducts(path: string):Promise<Product[] | []> {
+export async function getAllAnalisis(path: string):Promise<AnalisisWithId[] | []> {
   try {
     const db = await connectToDatabase();
-    const collection = db.collection('products');
+    const collection = db.collection('analisis');
 
-    const products = await collection.find<Product>({}).toArray();
+    const analisis = await collection.find<AnalisisWithId>({}).toArray();
 
     revalidatePath(path);
 
-    return JSON.parse(JSON.stringify(products));
+    return JSON.parse(JSON.stringify(analisis));
   } catch (error) {
     console.log(error);
     return []
