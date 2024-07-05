@@ -5,14 +5,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { CustomField } from '../CustomField';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import * as z from "zod";
+import * as z from "zod"
 import { useToast } from '@/components/ui/use-toast';
-import { insertAnalisis } from '@/lib/actions/analisis.actions';
+import { insertAnalisis, insertAnalisisBulk } from '@/lib/actions/analisis.actions';
 import { Analisis } from '@/lib/database/models/analisis.model';
 import { Textarea } from '@/components/ui/textarea';
 
@@ -62,9 +58,10 @@ export const addAnalisisFormSchema = z.object({
   addUrgentPrice: z.boolean(),
 })
 
-const AddAnalisisForm = (
+const AddAnalisisBulkForm = (
   // productData?: AddProductParams
 ) => {
+  const [bulkData, setBulkData] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const initialValues: Analisis = {
@@ -80,6 +77,58 @@ const AddAnalisisForm = (
     costPublicUrgent: 0,
     addUrgentPrice: false,
     promo: '',
+  }
+
+  const onChangeHandler = async (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    try {
+      setBulkData(event.target.value)
+      const data = event.target.value
+      const objects: Analisis[] = data.split('\n').map(row => {
+        const columns = row.split(',')
+        return {
+          lab: columns[0],
+          noIktan: Number(columns[1]),
+          code: columns[2],
+          name: columns[3],
+          deliveryTime: Number(columns[4]),
+          type: columns[5],
+          cost: Number(columns[6]),
+          costUrgent: Number(columns[7]),
+          costPublic: Number(columns[8]),
+          costPublicUrgent: Number(columns[12]),
+          addUrgentPrice: false,
+          promo: '',
+        }
+      })
+      const bulkInsertResponse = await insertAnalisisBulk(objects)
+
+      if (bulkInsertResponse.error) {
+        toast({
+          title: 'Something went wrong',
+          description: bulkInsertResponse.error.toString(),
+          duration: 5000,
+          className: 'error-toast',
+          variant: 'destructive'
+        })
+      }
+      else {
+        toast({
+          title: "Customer created!",
+          description: "You now can see the new customer.",
+          duration: 5000,
+          className: "success-toast",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: 'Something went wrong',
+        description: 'Please try again',
+        duration: 5000,
+        className: 'error-toast',
+        variant: 'destructive'
+      })
+      console.log(error);
+    }
   }
 
   const form = useForm<z.infer<typeof addAnalisisFormSchema>>({
@@ -127,10 +176,10 @@ const AddAnalisisForm = (
     <Card className='w-full max-w-4xl'>
       <CardHeader>
         <CardTitle>
-          Add New Analisis
+          Add Bulk Analisis
         </CardTitle>
         <CardDescription>
-          Fill out the form below to add a new product to your inventory.
+          Enter comma separated values
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -138,14 +187,19 @@ const AddAnalisisForm = (
           className='grid gap-6'
           onSubmit={form.handleSubmit(onSubmit)}>
           <CardContent>
-            <div className='grid md:grid-cols-2 gap-6'>
-              <CustomField
+            <div className='grid  gap-6'>
+              <Textarea
+                value={bulkData}
+                onChange={onChangeHandler}
+                placeholder='name, code, lab, noIktan, deliveryTime, type, cost, costUrgent, costPublic, costPublicUrgent'
+              />
+              {/* <CustomField
                 control={form.control}
                 name='name'
-                formLabel='Analisis Name/Profile'
+                formLabel='name, code, lab, noIktan, deliveryTime, type, cost, costUrgent, costPublic, costPublicUrgent'
                 className='w-full'
                 render={({ field }) =>
-                  <Input
+                  <Textarea
                     {...field}
                     placeholder='Enter analisis name'
                   />
@@ -154,106 +208,7 @@ const AddAnalisisForm = (
                   //   {...field}
                   // />
                 }
-              />
-              <CustomField
-                control={form.control}
-                name='code'
-                formLabel='Code'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    {...field}
-                  />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='lab'
-                formLabel='Laboratory'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    {...field}
-                  />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='noIktan'
-                formLabel='Iktan Number'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    type='number'
-                    {...field}
-                  />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='deliveryTime'
-                formLabel='Delivery Time'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    type='number'
-                    {...field} placeholder='' />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='type'
-                formLabel='Type'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    {...field} placeholder='' />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='cost'
-                formLabel='Cost'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    type='number'
-                    {...field} placeholder='' />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='costUrgent'
-                formLabel='Cost Urgent'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    type='number'
-                    {...field} placeholder='' />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='costPublic'
-                formLabel='Cost Public'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    type='number'
-                    {...field} placeholder='' />
-                }
-              />
-              <CustomField
-                control={form.control}
-                name='costPublicUrgent'
-                formLabel='Cost Public Urgent'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    type='number'
-                    {...field} placeholder='' />
-                }
-              />
+              /> */}
             </div>
           </CardContent>
           <CardFooter>
@@ -267,4 +222,4 @@ const AddAnalisisForm = (
   )
 }
 
-export default AddAnalisisForm
+export default AddAnalisisBulkForm

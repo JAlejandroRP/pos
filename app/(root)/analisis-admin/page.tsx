@@ -5,12 +5,17 @@ import Link from 'next/link'
 import React from 'react'
 
 const AnalisisAdminPage = async () => {
-  const analisis =  await getAllAnalisis('/analisis/');
+  const analisis = await getAllAnalisis('/analisis/');
 
   return (
     <div className='w-full'>
+      <h1>Analisis Admin Page</h1>
       <div className='flex justify-between'>
-        <h1>Analisis Admin Page</h1>
+        <Link href='/analisis-admin/add/bulk' passHref>
+          <Button role='a'>
+            Add Bulk Analisis
+          </Button>
+        </Link>
         <Link href='/analisis-admin/add' passHref>
           <Button role='a'>
             Add New Analisis

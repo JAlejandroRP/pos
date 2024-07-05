@@ -6,6 +6,7 @@ export interface AnalisisWithId extends Analisis {
 
 export type Analisis = {
   name: string,
+  tests?: ObjectId[],
   code: string,
   lab: string,
   noIktan: number,

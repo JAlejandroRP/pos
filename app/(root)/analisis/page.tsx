@@ -6,7 +6,7 @@ import React from 'react'
 
 const AnalisisPage = async () => {
   const analisis = await getAllAnalisis('/analisis');
-
+  
   return (
     <section>
       <div>
@@ -15,9 +15,9 @@ const AnalisisPage = async () => {
         </h2>
       </div>
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
       >
-        {analisis.map(analisis => <AnalisisCard analisis={analisis} />)}
+        {analisis.map(analisis => <AnalisisCard key={analisis.code} analisis={analisis} />)}
       </div>
     </section>
   )

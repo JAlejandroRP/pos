@@ -14,15 +14,15 @@ const AnalisisCard = ({ analisis }: { analisis: Analisis }) => {
       </CardHeader>
       <CardContent className='flex flex-grow flex-col pb-1'>
         <div className='line-clamp-4 text-md capitalize'>
-          {analisis.name.toLocaleLowerCase()}
+          {analisis.name.toLowerCase()}
         </div>
       </CardContent>
       <CardFooter className='mt-auto flex items-center justify-between py-6'>
         <span className="text-primary font-bold my-auto">${analisis.costPublic.toFixed(2)}</span>
         <Button size="sm" className="hover:bg-secondary my-auto px-2">
           <ShoppingCart className='h-6 w-6 m-1' />
-        </Button>
-      </CardFooter>
+        </Button> 
+      </CardFooter> 
     </Card>
   )
 }

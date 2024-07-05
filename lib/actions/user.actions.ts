@@ -2,8 +2,8 @@
 
 import { connectToDatabase } from "../database/mongodb";
 import { ObjectId } from "mongodb";
-import { clerkClient } from "@clerk/clerk-sdk-node";
 import { parseClerkApiError } from "../utils";
+import { clerkClient } from "@clerk/nextjs/server";
 
 // CREATE
 export async function createClerkUser(

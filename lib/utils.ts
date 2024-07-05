@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server"
 import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
 import { getUserByClerkId } from "./actions/user.actions";
+import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -28,7 +28,7 @@ export function createUsername(name: string) {
 }
 
 export function parseClerkApiError(error: ClerkApiError) {
-  if(!error.clerkError) throw error
+  if (!error.clerkError) throw error
 
   const errors = error.errors?.map((error) => error.longMessage).join(', ');
 

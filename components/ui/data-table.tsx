@@ -2,6 +2,7 @@
 
 import {
   ColumnDef,
+  RowSelectionState,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -16,9 +17,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+type DataWithId = {
+  _id: string;
+};
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: TData[],
 }
 
 export function DataTable<TData, TValue>({
@@ -29,8 +34,8 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    getRowId: originalRow => (originalRow as DataWithId)._id
   })
-  // console.log(table.getHeaderGroups());
 
   return (
     <div className="rounded-md border">
@@ -66,7 +71,7 @@ export function DataTable<TData, TValue>({
               >
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}
-                  className="truncate"
+                    className="truncate"
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
