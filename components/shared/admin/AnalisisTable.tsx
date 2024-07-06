@@ -5,6 +5,7 @@ import { AnalisisWithId } from '@/lib/database/models/analisis.model'
 import { DataTable } from '@/components/ui/data-table'
 import { deleteAnalisis } from '@/lib/actions/analisis.actions'
 import { Trash2 } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export const columns: ColumnDef<AnalisisWithId>[] = [
   // {
@@ -12,7 +13,12 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
   //   header: "Id",
   //   maxSize: 70,
   //   enableHiding: true,
-  // },
+  // }, 
+  {
+    accessorKey: "noIktan",
+    header: "Number IKTAN",
+    maxSize: 70,
+  },
   {
     accessorKey: "name",
     header: "Name",
@@ -34,11 +40,6 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
   {
     accessorKey: "lab",
     header: "Laboratory",
-    maxSize: 70,
-  },
-  {
-    accessorKey: "noIktan",
-    header: "Number IKTAN",
     maxSize: 70,
   },
   {
@@ -65,23 +66,27 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
   {
     maxSize: 50,
     id: 'select-col',
-    header: ({ table }) => (
-      <div className='flex justify-between items-center py-2'>
-        <input
-          type='checkbox'
-          checked={table.getIsAllRowsSelected()}
-          // indeterminate={table.getIsSomeRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
-        />
-        {Object.keys(table.getState().rowSelection).length > 0 && <button onClick={async () => {
-          const ids = table.getState().rowSelection as Object
-          const deleteResponse = await deleteAnalisis(Object.keys(ids))
+    header: ({ table }) => {
+      const pathname = usePathname()
+      return (
+        <div className='flex justify-between items-center py-2'>
+          <input
+            type='checkbox'
+            checked={table.getIsAllRowsSelected()}
+            // indeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
+          />
+          {Object.keys(table.getState().rowSelection).length > 0 && <button onClick={async () => {
+            const ids = table.getState().rowSelection as Object
+            const idsToDelete = Object.keys(ids)
+            const deleteResponse = await deleteAnalisis(idsToDelete, pathname)
 
-        }}>
-          <Trash2 className='h-4 w-4' />
-        </button>}
-      </div>
-    ),
+          }}>
+            <Trash2 className='h-4 w-4' />
+          </button>}
+        </div>
+      )
+    },
     cell: ({ row }) => (
       <input
         type='checkbox'
