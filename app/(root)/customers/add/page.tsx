@@ -3,10 +3,9 @@ import React from 'react'
 
 const CustomersAddPage = () => {
   return (
-    <>
-    <div>CustomersAddPage</div>
-    <AddCustomerForm />
-    </>
+    <div className='py-8'>
+      <AddCustomerForm />
+    </div>
   )
 }
 

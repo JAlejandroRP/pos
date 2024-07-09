@@ -3,11 +3,8 @@ import React from 'react'
 
 const AddBulkProductPage = () => {
   return (
-    <div>
-      AddBulk
-      <div>
-        <AddAnalisisBulkForm />
-      </div>
+    <div className='py-8'>
+      <AddAnalisisBulkForm />
     </div>
   )
 }

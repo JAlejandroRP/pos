@@ -15,6 +15,8 @@ import { useToast } from '@/components/ui/use-toast';
 import { insertAnalisis } from '@/lib/actions/analisis.actions';
 import { Analisis } from '@/lib/database/models/analisis.model';
 import { Textarea } from '@/components/ui/textarea';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router'
 
 export const addAnalisisFormSchema = z.object({
   name: z
@@ -63,8 +65,8 @@ export const addAnalisisFormSchema = z.object({
 })
 
 const AddAnalisisForm = (
-  // productData?: AddProductParams
 ) => {
+  const pathname = usePathname()
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const initialValues: Analisis = {
@@ -90,7 +92,7 @@ const AddAnalisisForm = (
   const onSubmit = async (values: z.infer<typeof addAnalisisFormSchema>) => {
     setIsSubmitting(true);
     try {
-      const createAnalisisResponse = await insertAnalisis(values);
+      const createAnalisisResponse = await insertAnalisis(values, pathname);
 
       if (createAnalisisResponse.error) {
         toast({
@@ -119,12 +121,12 @@ const AddAnalisisForm = (
       })
       console.log(error);
     }
-
+    form.reset()
     setIsSubmitting(false)
   }
 
   return (
-    <Card className='w-full max-w-4xl'>
+    <Card className='w-full max-w-4xl m-auto'>
       <CardHeader>
         <CardTitle>
           Add New Analisis

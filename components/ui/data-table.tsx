@@ -1,10 +1,11 @@
 "use client"
 
+import React, { useState } from 'react';
 import {
   ColumnDef,
-  RowSelectionState,
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table"
 
@@ -30,34 +31,33 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [pageIndex, setPageIndex] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+
   const table = useReactTable({
     data,
     columns,
+    state: {
+      pagination: { pageIndex, pageSize },
+    },
     getCoreRowModel: getCoreRowModel(),
-    getRowId: originalRow => (originalRow as DataWithId)._id
-  })
+    getPaginationRowModel: getPaginationRowModel(),
+    getRowId: originalRow => (originalRow as DataWithId)._id,
+    // onPaginationChange: 
+  });
 
   return (
     <div className="rounded-md border">
-      <Table className="table-fixed" >
+      <Table className="table-fixed">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}
-              className="max-w-12"
-            >
+            <TableRow key={headerGroup.id} className="max-w-12">
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}
-                    style={{ width: `${header.getSize()}px` }}
-                  >
-                    {
-                      flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )
-                    }
+                  <TableHead key={header.id} style={{ width: `${header.getSize()}px` }}>
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -65,14 +65,9 @@ export function DataTable<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
+              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}
-                    className="truncate"
-                  >
+                  <TableCell key={cell.id} className="truncate">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -88,5 +83,5 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

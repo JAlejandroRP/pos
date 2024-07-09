@@ -6,6 +6,7 @@ import { DataTable } from '@/components/ui/data-table'
 import { deleteAnalisis } from '@/lib/actions/analisis.actions'
 import { Trash2 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import TablePagination from './TablePagination'
 
 export const columns: ColumnDef<AnalisisWithId>[] = [
   // {
@@ -18,12 +19,14 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
     accessorKey: "noIktan",
     header: "Number IKTAN",
     maxSize: 70,
+    sortDescFirst: true,
+    enableSorting: true
   },
   {
     accessorKey: "name",
     header: "Name",
-    enableSorting: true,
-    enableResizing: true,
+    // enableSorting: true,
+    // enableResizing: true,
     // size: 250,
     maxSize: 250,
   },
@@ -58,51 +61,78 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
   {
     accessorKey: "costPublic",
     header: "Price Public",
-    maxSize: 70,
+    maxSize: 50,
     cell: ({ row }) => (<div>
       $ {row.original.costPublic}
-    </div>)
+    </div>),
+    sortDescFirst: true
   },
   {
-    maxSize: 50,
+    maxSize: 60,
     id: 'select-col',
     header: ({ table }) => {
+      const rowsSelected = Object.keys(table.getState().rowSelection).length > 0;
       const pathname = usePathname()
       return (
-        <div className='flex justify-between items-center py-2'>
+        <div className={`flex ${rowsSelected ? 'justify-between' : 'flex-col'} items-center py-2`}>
           <input
             type='checkbox'
             checked={table.getIsAllRowsSelected()}
             // indeterminate={table.getIsSomeRowsSelected()}
             onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
           />
-          {Object.keys(table.getState().rowSelection).length > 0 && <button onClick={async () => {
-            const ids = table.getState().rowSelection as Object
-            const idsToDelete = Object.keys(ids)
-            const deleteResponse = await deleteAnalisis(idsToDelete, pathname)
-
-          }}>
-            <Trash2 className='h-4 w-4' />
-          </button>}
+          {rowsSelected &&
+            <button
+              onClick={async () => {
+                const ids = table.getState().rowSelection as Object
+                const idsToDelete = Object.keys(ids)
+                const deleteResponse = await deleteAnalisis(idsToDelete, pathname)
+                table.setRowSelection({})
+              }}
+              className='hover:scale-110'
+            >
+              <Trash2 className='h-5 w-5' color='red' />
+            </button>
+          }
         </div>
       )
     },
     cell: ({ row }) => (
-      <input
-        type='checkbox'
-        checked={row.getIsSelected()}
-        disabled={!row.getCanSelect()}
-        onChange={row.getToggleSelectedHandler()}
-      />
+      <div className='flex flex-col'>
+        <input
+          type='checkbox'
+          checked={row.getIsSelected()}
+          disabled={!row.getCanSelect()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      </div>
     ),
   },
 ]
 
-const AnalisisTable = ({ analisis }: { analisis: AnalisisWithId[] }) => {
+const AnalisisTable = ({
+  page,
+  totalRows,
+  search,
+  resultsPerPage,
+  analisis
+}: {
+  page: number,
+  totalRows: number,
+  search: string,
+  resultsPerPage: number,
+  analisis: AnalisisWithId[]
+}) => {
+  const totalPages = totalRows / resultsPerPage
   return (
     <div>
       {/* <button onClick={columns.he}>hola</button> */}
       <DataTable columns={columns} data={analisis} />
+      <TablePagination 
+      totalPages={totalPages}
+      // setPageSize={() =>{}}
+      // table={}
+      />
     </div>
   )
 }

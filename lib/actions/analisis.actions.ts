@@ -1,45 +1,21 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-
-import { User } from "../database/models/user.model";
 import { Analisis, AnalisisWithId } from "../database/models/analisis.model";
 import { connectToDatabase } from "../database/mongodb";
 import { Collection, ObjectId } from "mongodb";
 
-async function createUniqueIndex(field: string, collection: Collection<Document>) {
-  try {
-
-    const indexSpec = { field: 1 };
-    const options = { unique: true };
-
-    // Crea el índice único
-    const result = await collection.createIndex(indexSpec, options);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
 // CREATE
-export async function insertAnalisis(newAnalisis: Analisis) {
+export async function insertAnalisis(newAnalisis: Analisis, pathname: string) {
   try {
     const db = await connectToDatabase();
-    const analisis:Collection<Analisis> = db.collection('analisis')
+    const analisis: Collection<Analisis> = db.collection('analisis')
 
     createIndex(analisis, 'noIktan');
-    // console.log('indice?');
-    // console.log(await analisis.indexExists('noIktan'))
-    // console.log(await analisis.listIndexes().toArray());
-
-    // if (!(await analisis.indexExists('noIktan'))) {
-    // const indexSpec = { 'noIktan': 1 };
-    // const options = { unique: true };
-    // const result = await analisis.createIndex(indexSpec, options);
-    // }
-
-
     const insertResponse = await analisis.insertOne(newAnalisis)
     console.log(insertResponse);
+
+    revalidatePath(pathname)
 
     return {
       success: true,
@@ -57,7 +33,7 @@ export async function insertAnalisis(newAnalisis: Analisis) {
 
 async function createIndex(collection: Collection<Analisis>, field: string) {
   try {
-    const indexSpec = { field: 1 };
+    const indexSpec = { [field]: 1 };
     const options = { unique: true };
     await collection.createIndex(indexSpec, options)
   } catch (error) {
@@ -66,46 +42,96 @@ async function createIndex(collection: Collection<Analisis>, field: string) {
 }
 
 // CREATE BULK
-export async function insertAnalisisBulk(newAnalisis: Analisis[]) {
+export async function insertAnalisisBulk(newAnalisis: Analisis[], pathname: string) {
   try {
     const db = await connectToDatabase();
-    const analisis = db.collection('analisis')
+    const analisis: Collection<Analisis> = db.collection('analisis')
 
-    if (!(await analisis.indexExists('noIktan'))) {
-      const indexSpec = { 'noIktan': 1 };
-      const options = { unique: true };
-      const result = await analisis.createIndex(indexSpec, options);
-    }
-    // this option prevents additional documents from being inserted if one fails
+    await createIndex(analisis, 'noIktan');
+
     const insertOptions = { ordered: true };
+    console.log(newAnalisis);
 
     const insertBulkResponse = await analisis.insertMany(newAnalisis, insertOptions)
-
+    revalidatePath(pathname)
     return {
       success: true,
       data: JSON.parse(JSON.stringify(insertBulkResponse))
     }
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     return {
       success: false,
-      error: error
+      error: error.errorResponse.message
     }
   }
 }
 
 // READ
-export async function getAllAnalisis(path: string): Promise<AnalisisWithId[] | []> {
+export async function getAnalisisCount() {
   try {
     const db = await connectToDatabase();
     const collection = db.collection('analisis');
 
-    const analisis = await collection.find<AnalisisWithId>({}).toArray();
-    console.log(analisis);
 
+    const analisis = await collection.countDocuments();
+
+    return {
+      success: true,
+      data: analisis
+    }
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      error: 'Error while getting count of documents' + error.toString() || error
+    }
+  }
+}
+
+// READ
+export async function getAllAnalisisById(path: string, id: string, fields?: object): Promise<
+  {
+    success: boolean,
+    data?: AnalisisWithId,
+    error?: string
+  }> {
+  try {
+    const db = await connectToDatabase();
+    const collection = db.collection('analisis');
+
+    const analisis = await collection
+      .findOne<AnalisisWithId>({ _id: new ObjectId(id) })
 
     revalidatePath(path);
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(analisis))
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: 'Error while getting analisis with id ' + id
+    }
+  }
+}
 
+// READ
+export async function getAllAnalisis(path: string, page: number, resultsPerPage: number, fields?: object): Promise<AnalisisWithId[] | []> {
+  try {
+    const db = await connectToDatabase();
+    const collection = db.collection('analisis');
+
+    const skip = page * resultsPerPage;
+
+    const analisis = await collection
+      .find<AnalisisWithId>({})
+      .sort({ noIktan: 1 })
+      .skip(skip)
+      .limit(resultsPerPage)
+      .toArray();
+    revalidatePath(path);
     return JSON.parse(JSON.stringify(analisis));
   } catch (error) {
     console.log(error);

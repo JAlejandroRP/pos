@@ -8,11 +8,11 @@ const CustomersPage = async () => {
   const customers = await getAllCustomersMongoDb();
     
   return (
-    <div className='w-full'>
+    <div className='w-full py-8'>
       <div className='flex justify-between'>
         <h1>Customers Admin Page</h1>
         <Link href='/customers/add' passHref>
-          <Button role='a'>
+          <Button role='a' variant='secondary' className='hover:bg-gray-200'>
             Add New Customer
           </Button>
         </Link>

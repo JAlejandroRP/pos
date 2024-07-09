@@ -8,29 +8,34 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
-const AnalisisCard = ({ analisis }: { analisis: AnalisisWithId }) => {
+const AnalisisCardSmall = ({ analisis }: { analisis: AnalisisWithId }) => {
   const pathname = usePathname()
   const createAnalisisUrl = () => pathname + '/' + analisis._id;
 
   return (
-    <Card className="flex flex-col h-full max-w-2xl m-auto" >
-      <CardHeader className='flex-grow flex-row'>
-        <CardTitle className='flex-grow capitalize'>{analisis.name.toLowerCase()}</CardTitle>
-      </CardHeader>
-      <CardContent className='flex flex-grow flex-col pb-1'>
-        <div className='line-clamp-4 text-md capitalize'>
-          Code: {analisis.code}
-        </div>
-      </CardContent>
+    <Card className="flex flex-col h-full" >
+      <Link
+        href={createAnalisisUrl()}
+      >
+        <CardHeader className='flex-grow flex-row'>
+          <CardTitle className='flex-grow line-clamp-2'>{analisis.code}</CardTitle>
+        </CardHeader>
+        <CardContent className='flex flex-grow flex-col pb-1'>
+          <div className='line-clamp-4 text-md capitalize'>
+            {analisis.name.toLowerCase()}
+          </div>
+        </CardContent>
+      </Link>
       <CardFooter className='mt-auto flex items-center justify-between py-6'>
         <span className="text-primary font-bold my-auto">${analisis.costPublic.toFixed(2)}</span>
         <Link
-          href={createAnalisisUrl()}
+          // href={createAnalisisUrl()}
+          href={'#'}
         >
-          <Button size="sm" className="hover:bg-green-600 my-auto px-2"
+          <Button size="sm" variant='outline' className="hover:bg-green-400 my-auto px-2"
           >
             <ShoppingCart
-              className='h-6 w-6 m-1'
+              className='h-5 w-5 '
             />
           </Button>
         </Link>
@@ -39,4 +44,4 @@ const AnalisisCard = ({ analisis }: { analisis: AnalisisWithId }) => {
   )
 }
 
-export default AnalisisCard
+export default AnalisisCardSmall
