@@ -3,7 +3,7 @@ import React from 'react'
 
 const AddBulkProductPage = () => {
   return (
-    <div className='py-8'>
+    <div className='py-8 mx-auto'>
       <AddAnalisisBulkForm />
     </div>
   )

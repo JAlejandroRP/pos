@@ -100,7 +100,7 @@ const AddAnalisisBulkForm = (
   }
 
   return (
-    <Card className='w-full max-w-4xl'>
+    <Card className='w-full max-w-4xl mx-auto'>
       <CardHeader>
         <CardTitle>
           Add Bulk Analisis
