@@ -9,8 +9,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getClerkCurrentUser();
   // console.log(user);
   
-  if(!user) {
-    console.log('user not found');
+  if(!user.success) {
     redirect('/sign-in');
   }
 

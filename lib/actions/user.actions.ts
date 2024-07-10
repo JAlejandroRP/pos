@@ -95,8 +95,12 @@ export async function getAllCustomersMongoDb() {
 export async function getClerkCurrentUser() {
   try {
     const { userId } = auth();
-
-    if (!userId) return null;
+    // console.log(userId);
+    
+    if (!userId) return {
+      success: false,
+      error: 'Error while getting userClerkId'
+    };
 
     const user = await getUserByClerkId(userId);
 
