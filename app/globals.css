@@ -1,9 +1,4 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-.cl-userButtonBox {
-  display: flex;
-  flex-flow: row-reverse;
-  gap: 12px;
-}
+  @tailwind components;
+  @tailwind utilities;
+  

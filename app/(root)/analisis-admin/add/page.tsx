@@ -1,4 +1,4 @@
-import AddAnalisisForm from '@/components/shared/admin/AddAnalisisForm'
+import AddAnalisisForm from '@/components/shared/AddAnalisisForm'
 import React from 'react'
 
 const AddProductPage = () => {

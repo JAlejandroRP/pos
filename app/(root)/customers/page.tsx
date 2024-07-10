@@ -1,4 +1,4 @@
-import CustomersTable from '@/components/shared/admin/CustomersTable';
+import CustomersTable from '@/components/shared/CustomersTable';
 import { Button } from '@/components/ui/button'
 import { getAllCustomersMongoDb } from '@/lib/actions/user.actions';
 import Link from 'next/link'

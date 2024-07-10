@@ -6,7 +6,7 @@ import { AddProductDefaultValues, ItemsCategories } from '@/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form';
-import { CustomField } from '../CustomField';
+import { CustomField } from './CustomField';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';

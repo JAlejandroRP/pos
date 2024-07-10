@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { CustomField } from '../CustomField';
+import { CustomField } from './CustomField';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";

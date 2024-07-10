@@ -1,5 +1,5 @@
 "use server";
-
+import { auth } from "@clerk/nextjs/server"
 import { connectToDatabase } from "../database/mongodb";
 import { ObjectId } from "mongodb";
 import { parseClerkApiError } from "../utils";
@@ -89,6 +89,27 @@ export async function getAllCustomersMongoDb() {
     return JSON.parse(JSON.stringify(users));
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function getClerkCurrentUser() {
+  try {
+    const { userId } = auth();
+
+    if (!userId) return null;
+
+    const user = await getUserByClerkId(userId);
+
+    return {
+      success:true,
+      data:JSON.parse(JSON.stringify(user))
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success:false,
+      error:'User not found'
+    }
   }
 }
 

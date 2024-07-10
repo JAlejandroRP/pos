@@ -1,6 +1,6 @@
 // import React from 'react'
 import { redirect } from "next/navigation";
-import AnalisisCard from "@/components/shared/client/AnalisisCard"
+import AnalisisCard from "@/components/shared/AnalisisCard"
 import { getAllAnalisisById } from "@/lib/actions/analisis.actions"
 
 const AnalisisPage = async (

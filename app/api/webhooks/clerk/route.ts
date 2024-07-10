@@ -63,14 +63,18 @@ export async function POST(req: Request) {
 
   // CREATE
   if (eventType === "user.created") {
-    const { id, email_addresses, image_url, first_name, last_name, username } = evt.data;
+    const { id, email_addresses, image_url, phone_numbers,first_name, last_name, username } = evt.data;
 
-    const user = {
+    const user:CreateMongoDbUserParams = {
       clerkId: id,
       email: email_addresses[0].email_address,
-      username: username!,
-      firstName: first_name!,
-      lastName: last_name!,
+      name: username!,
+      birthday: '2000/01/01',
+      phone: phone_numbers[0].phone_number,
+      sex: 'M',
+      role: 'admin',
+      // firstName: first_name!,
+      // lastName: last_name!,
       photo: image_url,
     };
     logs.push(user)

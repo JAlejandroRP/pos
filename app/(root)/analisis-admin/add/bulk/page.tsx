@@ -1,4 +1,4 @@
-import AddAnalisisBulkForm from '@/components/shared/admin/AddAnalisisBulkForm'
+import AddAnalisisBulkForm from '@/components/shared/AddAnalisisBulkForm'
 import React from 'react'
 
 const AddBulkProductPage = () => {

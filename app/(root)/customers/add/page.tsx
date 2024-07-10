@@ -1,4 +1,4 @@
-import AddCustomerForm from '@/components/shared/admin/AddCustomerForm'
+import AddCustomerForm from '@/components/shared/AddCustomerForm'
 import React from 'react'
 
 const CustomersAddPage = () => {

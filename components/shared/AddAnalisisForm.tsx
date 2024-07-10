@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { CustomField } from '../CustomField';
+import { CustomField } from './CustomField';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";
@@ -17,6 +17,7 @@ import { Analisis } from '@/lib/database/models/analisis.model';
 import { Textarea } from '@/components/ui/textarea';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router'
+import { Select, SelectContent, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export const addAnalisisFormSchema = z.object({
   name: z
@@ -62,6 +63,7 @@ export const addAnalisisFormSchema = z.object({
   }, z.number().min(50, { message: "Must enter a cost" }).max(9999, { message: "Cost can't be greater than 9999" })),
   promo: z.string().trim(),
   addUrgentPrice: z.boolean(),
+  test: z.string().optional().array()
 })
 
 const AddAnalisisForm = (
@@ -82,6 +84,7 @@ const AddAnalisisForm = (
     costPublicUrgent: 0,
     addUrgentPrice: false,
     promo: '',
+    tests: []
   }
 
   const form = useForm<z.infer<typeof addAnalisisFormSchema>>({
@@ -256,6 +259,69 @@ const AddAnalisisForm = (
                     {...field} placeholder='' />
                 }
               />
+              {/* <CustomField
+                control={form.control}
+                name='test'
+                formLabel='Perfil Tests'
+                className='w-full'
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Language</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              "w-[200px] justify-between",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value
+                              ? languages.find(
+                                (language) => language.value === field.value
+                              )?.label
+                              : "Select language"}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[200px] p-0">
+                        <Command>
+                          <CommandInput placeholder="Search language..." />
+                          <CommandEmpty>No language found.</CommandEmpty>
+                          <CommandGroup>
+                            {languages.map((language) => (
+                              <CommandItem
+                                value={language.label}
+                                key={language.value}
+                                onSelect={() => {
+                                  form.setValue("language", language.value)
+                                }}
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    language.value === field.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {language.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription>
+                      This is the language that will be used in the dashboard.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              /> */}
             </div>
           </CardContent>
           <CardFooter>

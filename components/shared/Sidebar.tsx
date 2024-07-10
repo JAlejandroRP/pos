@@ -5,7 +5,7 @@ import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import React from 'react'
-import { Button } from '../../ui/button';
+import { Button } from '../ui/button';
 import { User } from '@/lib/database/models/user.model';
 
 const Sidebar = ({ user }: { user: User }) => {

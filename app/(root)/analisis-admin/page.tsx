@@ -1,4 +1,4 @@
-import AnalisisTable from '@/components/shared/admin/AnalisisTable'
+import AnalisisTable from '@/components/shared/AnalisisTable'
 import { Button } from '@/components/ui/button'
 import { getAllAnalisis, getAnalisisCount } from '@/lib/actions/analisis.actions'
 import { useSearchParams } from 'next/navigation';

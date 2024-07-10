@@ -1,25 +1,8 @@
-import { auth } from "@clerk/nextjs/server"
 import { type ClassValue, clsx } from "clsx"
-import { getUserByClerkId } from "./actions/user.actions";
 import { twMerge } from 'tailwind-merge'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
-}
-
-export async function getClerkCurrentUser() {
-  try {
-    const { userId } = auth();
-
-    if (!userId) return null;
-
-    const user = await getUserByClerkId(userId);
-
-    return user;
-  } catch (error) {
-    console.log('Error while trying to get current user:', error);
-    throw error
-  }
 }
 
 export function createUsername(name: string) {

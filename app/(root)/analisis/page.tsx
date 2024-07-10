@@ -1,4 +1,4 @@
-import AnalisisCardSmall from '@/components/shared/client/AnalisisCardSmall';
+import AnalisisCardSmall from '@/components/shared/AnalisisCardSmall';
 import { Button } from '@/components/ui/button';
 import { getAllAnalisis } from '@/lib/actions/analisis.actions';
 import { ShoppingCart } from 'lucide-react';
