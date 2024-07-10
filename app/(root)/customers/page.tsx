@@ -12,7 +12,7 @@ const CustomersPage = async () => {
       <div className='flex justify-between'>
         {/* <h1>Customers Admin Page</h1> */}
         <Link href='/customers/add' passHref>
-          <Button role='a' variant='secondary' className='hover:bg-gray-200'>
+          <Button role='a' variant='outline' className='hover:bg-gray-200'>
             Add New Customer
           </Button>
         </Link>
