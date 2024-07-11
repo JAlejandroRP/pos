@@ -50,7 +50,6 @@ export async function insertAnalisisBulk(newAnalisis: Analisis[], pathname: stri
     await createIndex(analisis, 'noIktan');
 
     const insertOptions = { ordered: true };
-    console.log(newAnalisis);
 
     const insertBulkResponse = await analisis.insertMany(newAnalisis, insertOptions)
     revalidatePath(pathname)
@@ -118,20 +117,26 @@ export async function getAllAnalisisById(path: string, id: string, fields?: obje
 }
 
 // READ
-export async function getAllAnalisis(path: string, page: number, resultsPerPage: number, fields?: object): Promise<AnalisisWithId[] | []> {
+export async function getAllAnalisis(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<AnalisisWithId[] | []> {
   try {
     const db = await connectToDatabase();
     const collection = db.collection('analisis');
 
-    const skip = page * resultsPerPage;
+    const skip = query ? 0 : page * resultsPerPage;
+
+    const projection = fields || {};
 
     const analisis = await collection
-      .find<AnalisisWithId>({})
+      .find<AnalisisWithId>(
+        { name: new RegExp(query, 'i') }
+      )
+      .project(projection)
       .sort({ noIktan: 1 })
       .skip(skip)
       .limit(resultsPerPage)
       .toArray();
     revalidatePath(path);
+
     return JSON.parse(JSON.stringify(analisis));
   } catch (error) {
     console.log(error);

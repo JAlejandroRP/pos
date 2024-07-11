@@ -1,9 +1,9 @@
 "use client";
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
@@ -12,12 +12,28 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";
 import { useToast } from '@/components/ui/use-toast';
-import { insertAnalisis } from '@/lib/actions/analisis.actions';
+import { getAllAnalisis, insertAnalisis } from '@/lib/actions/analisis.actions';
 import { Analisis } from '@/lib/database/models/analisis.model';
 import { Textarea } from '@/components/ui/textarea';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router'
 import { Select, SelectContent, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { cn } from '@/lib/utils';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
+
+const languages = [
+  { label: "English", value: "en" },
+  { label: "French", value: "fr" },
+  { label: "German", value: "de" },
+  { label: "Spanish", value: "es" },
+  { label: "Portuguese", value: "pt" },
+  { label: "Russian", value: "ru" },
+  { label: "Japanese", value: "ja" },
+  { label: "Korean", value: "ko" },
+  { label: "Chinese", value: "zh" },
+] as const
 
 export const addAnalisisFormSchema = z.object({
   name: z
@@ -63,11 +79,14 @@ export const addAnalisisFormSchema = z.object({
   }, z.number().min(50, { message: "Must enter a cost" }).max(9999, { message: "Cost can't be greater than 9999" })),
   promo: z.string().trim(),
   addUrgentPrice: z.boolean(),
-  test: z.string().optional().array()
+  tests: z.string()
+  // test: z.string().optional().array()
 })
 
 const AddAnalisisForm = (
+  // pathname: string
 ) => {
+  const [analisisList, setAnalisisList] = useState([])
   const pathname = usePathname()
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
@@ -84,8 +103,17 @@ const AddAnalisisForm = (
     costPublicUrgent: 0,
     addUrgentPrice: false,
     promo: '',
-    tests: []
+    tests: ''
   }
+
+  useEffect(() => {
+    const getAnalisisList = async () => {
+      // const updatedViews = await getAllAnalisis(pathname)
+      // setViews(updatedViews)
+    }
+
+    // updateViews()
+  }, [])
 
   const form = useForm<z.infer<typeof addAnalisisFormSchema>>({
     resolver: zodResolver(addAnalisisFormSchema),
@@ -259,14 +287,12 @@ const AddAnalisisForm = (
                     {...field} placeholder='' />
                 }
               />
-              {/* <CustomField
+              <FormField
                 control={form.control}
-                name='test'
-                formLabel='Perfil Tests'
-                className='w-full'
+                name='tests'
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Language</FormLabel>
+                    <FormLabel>Perfil Tests</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -290,28 +316,30 @@ const AddAnalisisForm = (
                       <PopoverContent className="w-[200px] p-0">
                         <Command>
                           <CommandInput placeholder="Search language..." />
-                          <CommandEmpty>No language found.</CommandEmpty>
-                          <CommandGroup>
-                            {languages.map((language) => (
-                              <CommandItem
-                                value={language.label}
-                                key={language.value}
-                                onSelect={() => {
-                                  form.setValue("language", language.value)
-                                }}
-                              >
-                                <Check
-                                  className={cn(
-                                    "mr-2 h-4 w-4",
-                                    language.value === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                                {language.label}
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
+                          <CommandList>
+                            <CommandEmpty>No language found.</CommandEmpty>
+                            <CommandGroup>
+                              {languages.map((language) => (
+                                <CommandItem
+                                  value={language.label}
+                                  key={language.value}
+                                  onSelect={() => {
+                                    form.setValue("tests", field.value)
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      language.value === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                  {language.label}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
                         </Command>
                       </PopoverContent>
                     </Popover>
@@ -321,7 +349,7 @@ const AddAnalisisForm = (
                     <FormMessage />
                   </FormItem>
                 )}
-              /> */}
+              />
             </div>
           </CardContent>
           <CardFooter>

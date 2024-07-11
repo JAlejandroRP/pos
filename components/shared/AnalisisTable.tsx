@@ -123,16 +123,13 @@ const AnalisisTable = ({
   resultsPerPage: number,
   analisis: AnalisisWithId[]
 }) => {
-  const totalPages = totalRows / resultsPerPage
   return (
     <div>
       {/* <button onClick={columns.he}>hola</button> */}
       <DataTable columns={columns} data={analisis} />
-      <TablePagination 
-      totalPages={totalPages}
-      // setPageSize={() =>{}}
-      // table={}
-      />
+      {/* <TablePagination
+        totalPages={totalPages}
+      /> */}
     </div>
   )
 }
