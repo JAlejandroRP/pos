@@ -22,7 +22,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const allPages = generatePagination(currentPage, totalPages);
 
   return (
-    <div className="inline-flex mt-5">
+    <div className="flex justify-center items-center mt-5">
       <PaginationArrow
         direction="left"
         href={createPageURL(currentPage - 1)}

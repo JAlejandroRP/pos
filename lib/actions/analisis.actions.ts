@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { Analisis, AnalisisWithId } from "../database/models/analisis.model";
+import { Analisis } from "../database/models/analisis.model";
 import { connectToDatabase } from "../database/mongodb";
 import { Collection, ObjectId } from "mongodb";
 
@@ -12,7 +12,28 @@ export async function insertAnalisis(newAnalisis: Analisis, pathname: string) {
     const analisis: Collection<Analisis> = db.collection('analisis')
 
     createIndex(analisis, 'noIktan');
-    const insertResponse = await analisis.insertOne(newAnalisis)
+
+    const insertResponse = await analisis.updateOne(
+      {
+        noIktan: newAnalisis.noIktan
+      },
+      {
+        "$set": {
+          name: newAnalisis.name,
+          tests: newAnalisis.tests,
+          code: newAnalisis.code,
+          lab: newAnalisis.lab,
+          noIktan: newAnalisis.noIktan,
+          deliveryTime: newAnalisis.deliveryTime,
+          type: newAnalisis.type,
+          cost: newAnalisis.cost,
+          costUrgent: newAnalisis.costUrgent,
+          costPublic: newAnalisis.costPublic,
+          costPublicUrgent: newAnalisis.costPublicUrgent,
+          addUrgentPrice: newAnalisis.addUrgentPrice,
+          promo: newAnalisis.promo,
+        }
+      }, { upsert: true })
     console.log(insertResponse);
 
     revalidatePath(pathname)
@@ -22,8 +43,8 @@ export async function insertAnalisis(newAnalisis: Analisis, pathname: string) {
       data: JSON.parse(JSON.stringify(insertResponse))
     }
   } catch (error: any) {
-    // console.log(Object.keys(error));
-    // console.log(error.errorResponse.errmsg);
+    console.log(Object.keys(error));
+    console.log(error);
     return {
       success: false,
       error: error.errorResponse.errmsg
@@ -92,7 +113,7 @@ export async function getAnalisisCount() {
 export async function getAllAnalisisById(path: string, id: string, fields?: object): Promise<
   {
     success: boolean,
-    data?: AnalisisWithId,
+    data?: Analisis,
     error?: string
   }> {
   try {
@@ -100,7 +121,7 @@ export async function getAllAnalisisById(path: string, id: string, fields?: obje
     const collection = db.collection('analisis');
 
     const analisis = await collection
-      .findOne<AnalisisWithId>({ _id: new ObjectId(id) })
+      .findOne<Analisis>({ _id: new ObjectId(id) })
 
     revalidatePath(path);
     return {
@@ -117,17 +138,18 @@ export async function getAllAnalisisById(path: string, id: string, fields?: obje
 }
 
 // READ
-export async function getAllAnalisis(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<AnalisisWithId[] | []> {
+export async function getAllAnalisis(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<Analisis[] | []> {
   try {
+    if (page < 0) throw new Error('Page cant be less than 0')
     const db = await connectToDatabase();
     const collection = db.collection('analisis');
 
-    const skip = query ? 0 : page * resultsPerPage;
+    const skip = query ? 0 : (page - 1) * resultsPerPage;
 
     const projection = fields || {};
 
     const analisis = await collection
-      .find<AnalisisWithId>(
+      .find<Analisis>(
         { name: new RegExp(query, 'i') }
       )
       .project(projection)

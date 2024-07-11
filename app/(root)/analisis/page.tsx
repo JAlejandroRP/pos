@@ -17,9 +17,9 @@ const AnalisisPage = async ({
 }) => {
   const params = new URLSearchParams(searchParams);
   const query = searchParams?.query || '';
-  const currentPage = Number(searchParams?.page) || 0;
-  const resultsPerPage = Number(searchParams?.resultsPerPage) || 100;
-  const analisis = await getAllAnalisis('/analisis', currentPage, resultsPerPage)
+  const currentPage = Number(searchParams?.page) || 1;
+  const resultsPerPage = Number(searchParams?.resultsPerPage) || 1000;
+  const analisis = await getAllAnalisis('/analisis', currentPage, resultsPerPage, "")
 
   return (
     <section>
@@ -43,7 +43,7 @@ const AnalisisPage = async ({
         <div
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
         >
-          {analisis.map(analisis => <AnalisisCardSmall key={analisis.code} analisis={analisis} />)}
+          {analisis.map(analisis => <AnalisisCardSmall key={analisis._id.toString()} analisis={analisis} />)}
         </div>
 
       </main>

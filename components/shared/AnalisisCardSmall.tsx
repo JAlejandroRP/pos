@@ -18,7 +18,10 @@ const AnalisisCardSmall = ({ analisis }: { analisis: AnalisisWithId }) => {
         href={createAnalisisUrl()}
       >
         <CardHeader className='flex-grow flex-row'>
-          <CardTitle className='flex-grow line-clamp-2'>{analisis.code}</CardTitle>
+          <CardTitle className='flex-grow line-clamp-2'>
+            <div>
+              {analisis.noIktan} - {analisis.code}
+            </div></CardTitle>
         </CardHeader>
         <CardContent className='flex flex-grow flex-col pb-1'>
           <div className='line-clamp-4 text-md capitalize'>

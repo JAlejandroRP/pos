@@ -7,6 +7,7 @@ import { deleteAnalisis } from '@/lib/actions/analisis.actions'
 import { Trash2 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import TablePagination from './TablePagination'
+import Link from 'next/link'
 
 export const columns: ColumnDef<AnalisisWithId>[] = [
   // {
@@ -29,6 +30,11 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
     // enableResizing: true,
     // size: 250,
     maxSize: 250,
+    cell: ({ row }) => (<div>
+      <Link href={`/analisis-admin/update/${row.original._id}`}>
+        {row.original.name}
+      </Link>
+    </div>),
   },
   {
     accessorKey: "code",

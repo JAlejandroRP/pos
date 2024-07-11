@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import * as z from "zod"
 import { useToast } from '@/components/ui/use-toast';
-import { insertAnalisis, insertAnalisisBulk } from '@/lib/actions/analisis.actions';
+import { upsertAnalisis, insertAnalisisBulk } from '@/lib/actions/analisis.actions';
 import { Analisis } from '@/lib/database/models/analisis.model';
 import { Textarea } from '@/components/ui/textarea';
 import { usePathname } from 'next/navigation'
@@ -80,8 +80,8 @@ const AddAnalisisBulkForm = (
       }
       else {
         toast({
-          title: "Customer created!",
-          description: "You now can see the new customer.",
+          title: "Analisis created!",
+          description: "You now can see the new analisis.",
           duration: 5000,
           className: "success-toast",
         });

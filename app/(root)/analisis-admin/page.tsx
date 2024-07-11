@@ -18,17 +18,16 @@ const AnalisisAdminPage = async ({
 }) => {
   const params = new URLSearchParams(searchParams);
   const query = searchParams?.query || '';
-  const currentPage = Number(searchParams?.page) || 0;
+  const currentPage = Number(searchParams?.page) || 1;
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 10;
   const analisis = await getAllAnalisis('/analisis', currentPage, resultsPerPage, query)
   const totalFilteredRows = analisis.length;
   const totalRows = (await getAnalisisCount()).data || 0;
-  const totalFilteredPages = (totalFilteredRows / resultsPerPage) < 1 ? 1 : (totalFilteredRows / resultsPerPage);
-  const totalPages = totalRows / resultsPerPage;
+  const totalFilteredPages = Math.ceil(totalFilteredRows / resultsPerPage) < 1 ? 1 : (totalFilteredRows / resultsPerPage);
+  const totalPages = Math.ceil(totalRows / resultsPerPage);
 
   return (
     <div className='w-full py-8'>
-      {/* <h1>Analisis Admin Page</h1> */}
       <div className='flex justify-between'>
         <Link href='/analisis-admin/add/bulk' passHref>
           <Button role='a' variant={'outline'}>
@@ -41,11 +40,11 @@ const AnalisisAdminPage = async ({
           </Button>
         </Link>
       </div>
-      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+      <div className="mt-4 flex flex-row items-center justify-between gap-2 md:mt-8">
         <Search placeholder="Search analisis..." />
-        {/* <CreateInvoice /> */}
       </div>
-      <div className='mt-8'>
+      <div className='p-2'>Total Rows: {totalRows}, Total Pages {totalPages}</div>
+      <div className='mt-2'>
         {analisis && <AnalisisTable
           page={currentPage}
           resultsPerPage={resultsPerPage}

@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { CustomField } from './CustomField';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -14,28 +13,19 @@ import * as z from "zod";
 import { useToast } from '@/components/ui/use-toast';
 import { getAllAnalisis, insertAnalisis } from '@/lib/actions/analisis.actions';
 import { Analisis } from '@/lib/database/models/analisis.model';
-import { Textarea } from '@/components/ui/textarea';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router'
-import { Select, SelectContent, SelectGroup, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
-
-const languages = [
-  { label: "English", value: "en" },
-  { label: "French", value: "fr" },
-  { label: "German", value: "de" },
-  { label: "Spanish", value: "es" },
-  { label: "Portuguese", value: "pt" },
-  { label: "Russian", value: "ru" },
-  { label: "Japanese", value: "ja" },
-  { label: "Korean", value: "ko" },
-  { label: "Chinese", value: "zh" },
-] as const
+import { ObjectId } from 'mongodb';
 
 export const addAnalisisFormSchema = z.object({
+  // _id: z.string(),
+  // _id: z.preprocess((value) => {
+  //   return new ObjectId(value )
+  // }),
   name: z
     .string()
     .trim() // Remove leading/trailing whitespace
@@ -79,51 +69,78 @@ export const addAnalisisFormSchema = z.object({
   }, z.number().min(50, { message: "Must enter a cost" }).max(9999, { message: "Cost can't be greater than 9999" })),
   promo: z.string().trim(),
   addUrgentPrice: z.boolean(),
-  tests: z.string()
-  // test: z.string().optional().array()
+  // tests: z.string()
+  tests: z.string().array()
 })
 
-const AddAnalisisForm = (
-  // pathname: string
+export type AnalisisName = {
+  name: string,
+  _id: ObjectId
+}
+
+const AddAnalisisForm = ({
+  analisisList,
+  analisisData
+}: {
+  analisisList: AnalisisName[],
+  analisisData?: Analisis
+}
 ) => {
-  const [analisisList, setAnalisisList] = useState([])
+  // const [analisisList, setAnalisisList] = useState([])
   const pathname = usePathname()
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const initialValues: Analisis = {
-    lab: '',
-    noIktan: 0,
-    code: '',
-    name: '',
-    deliveryTime: 0,
-    type: '',
-    cost: 0,
-    costUrgent: 0,
-    costPublic: 0,
-    costPublicUrgent: 0,
-    addUrgentPrice: false,
-    promo: '',
-    tests: ''
+    lab: analisisData?.lab || '',
+    noIktan: analisisData?.noIktan || 0,
+    code: analisisData?.code || '',
+    name: analisisData?.name || '',
+    deliveryTime: analisisData?.deliveryTime || 0,
+    type: analisisData?.type || '',
+    cost: analisisData?.cost || 0,
+    costUrgent: analisisData?.costUrgent || 0,
+    costPublic: analisisData?.costPublic || 0,
+    costPublicUrgent: analisisData?.costPublicUrgent || 0,
+    addUrgentPrice: analisisData?.addUrgentPrice || false,
+    promo: analisisData?.promo || '',
+    tests: analisisData?.tests || [],
+    // _id: analisisData?._id || new ObjectId()
   }
 
-  useEffect(() => {
-    const getAnalisisList = async () => {
-      // const updatedViews = await getAllAnalisis(pathname)
-      // setViews(updatedViews)
+  const addAnalisisToPerfil = (analisis: string) => {
+    let currAnalisis = form.getValues().tests
+
+    const index = currAnalisis.indexOf(analisis)
+
+    if (index >= 0) {
+      currAnalisis = currAnalisis.filter(e => e !== analisis)
+      console.log('filtered', currAnalisis);
+
+      form.setValue("tests", currAnalisis)
+      // console.log(form.getValues().tests);
+      return;
     }
 
-    // updateViews()
-  }, [])
+    currAnalisis.push(analisis)
+    form.setValue("tests", currAnalisis)
+    console.log(form.getValues().tests)
+  }
 
   const form = useForm<z.infer<typeof addAnalisisFormSchema>>({
     resolver: zodResolver(addAnalisisFormSchema),
     defaultValues: initialValues
   })
 
+  console.log(analisisData);
+
+
   const onSubmit = async (values: z.infer<typeof addAnalisisFormSchema>) => {
     setIsSubmitting(true);
     try {
-      const createAnalisisResponse = await insertAnalisis(values, pathname);
+      const createAnalisisResponse = await insertAnalisis({
+        _id: analisisData?._id,
+        ...values
+      }, pathname);
 
       if (createAnalisisResponse.error) {
         toast({
@@ -163,7 +180,7 @@ const AddAnalisisForm = (
           Add New Analisis
         </CardTitle>
         <CardDescription>
-          Fill out the form below to add a new product to your inventory.
+          Fill out the form below to add a new analisis to your inventory.
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -300,42 +317,39 @@ const AddAnalisisForm = (
                             variant="outline"
                             role="combobox"
                             className={cn(
-                              "w-[200px] justify-between",
+                              "w-full justify-between",
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            {field.value
-                              ? languages.find(
-                                (language) => language.value === field.value
-                              )?.label
-                              : "Select language"}
+                            Select analisis
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-[200px] p-0">
+                      <PopoverContent className="w-full p-0">
                         <Command>
-                          <CommandInput placeholder="Search language..." />
+                          <CommandInput placeholder="Search analisis..." />
                           <CommandList>
-                            <CommandEmpty>No language found.</CommandEmpty>
+                            <CommandEmpty>No analisis found.</CommandEmpty>
                             <CommandGroup>
-                              {languages.map((language) => (
+                              {analisisList.map((anlisis) => (
                                 <CommandItem
-                                  value={language.label}
-                                  key={language.value}
+                                  className='text-xs'
+                                  value={anlisis.name}
+                                  key={anlisis._id.toString()}
                                   onSelect={() => {
-                                    form.setValue("tests", field.value)
+                                    addAnalisisToPerfil(anlisis.name)
                                   }}
                                 >
                                   <Check
                                     className={cn(
                                       "mr-2 h-4 w-4",
-                                      language.value === field.value
+                                      form.getValues().tests.includes(anlisis.name)
                                         ? "opacity-100"
                                         : "opacity-0"
                                     )}
                                   />
-                                  {language.label}
+                                  {anlisis.name}
                                 </CommandItem>
                               ))}
                             </CommandGroup>
@@ -343,8 +357,13 @@ const AddAnalisisForm = (
                         </Command>
                       </PopoverContent>
                     </Popover>
-                    <FormDescription>
-                      This is the language that will be used in the dashboard.
+                    {form.getValues('tests').length > 0 &&
+                      <Label className='pt-1'>Perfil will have:</Label>
+                    }
+                    <FormDescription className='flex flex-col'>
+                      {form.getValues('tests').map(test => (
+                        <Label key={test} className='capitalize'>{test.toLowerCase()}</Label>
+                      ))}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
