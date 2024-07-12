@@ -14,7 +14,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <main className="flex min-h-screen w-full flex-col bg-white lg:flex-row">
+    <main className="flex min-h-screen w-full flex-col lg:flex-row">
       <Sidebar user={user.data} />
       <MobileNav user={user.data}/>
       <div className="flex-1 overflow-auto lg:mt-0 lg:max-h-screen">

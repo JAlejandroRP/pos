@@ -20,7 +20,7 @@ const MobileNav = ({ user }: { user: User }) => {
       </Link>
       <nav className="flex gap-2">
         <SignedIn>
-          <UserButton afterSignOutUrl='/' />
+          <UserButton/>
           <Sheet>
             <SheetTrigger>
               <Menu />

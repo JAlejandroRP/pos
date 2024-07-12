@@ -7,13 +7,14 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import { Button } from '../ui/button';
 import { User } from '@/lib/database/models/user.model';
+import { ModeToggle } from './ThemeSelector';
 
 const Sidebar = ({ user }: { user: User }) => {
   const pathname = usePathname();
 
   return (
     // oculto siempre a no ser que sea lg
-    <aside className="hidden h-screen w-58 bg-white p-5 shadow-md lg:flex">
+    <aside className="hidden h-screen w-58 p-5 shadow-md lg:flex">
       <div className="flex size-full flex-col gap-4">
         {/* <Link href='/' className='sidebar-logo'/> */}
         <nav className='h-full flex-col justify-between md:flex md:gap-4'>
@@ -43,14 +44,6 @@ const Sidebar = ({ user }: { user: User }) => {
               }
               </ul>
               <ul>
-              {/* {
-                user.role === 'admin' &&
-                <li className=''>
-                  <hr
-                  title='admin-section'
-                    className="my-4 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400" />
-                </li>
-              } */}
               {
                 user.role === 'admin' &&
                 navLinks.admin.map(link => {
@@ -78,7 +71,7 @@ const Sidebar = ({ user }: { user: User }) => {
               <li
                 className='justify-center items-center cursor-pointer gap-4 p-4'
               >
-                <UserButton afterSignOutUrl='/' showName />
+                <UserButton showName />
               </li>
             </ul>
           </SignedIn>
@@ -87,6 +80,7 @@ const Sidebar = ({ user }: { user: User }) => {
               <Link href='/sign-in'>Sign In</Link>
             </Button>
           </SignedOut>
+          <ModeToggle/>
         </nav>
       </div>
     </aside >
