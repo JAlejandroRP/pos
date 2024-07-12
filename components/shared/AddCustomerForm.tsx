@@ -202,7 +202,7 @@ const AddClientForm = (
             </div>
           </CardContent>
           <CardFooter>
-            <Button className='ml-auto' type='submit'>
+            <Button className='ml-auto' type='submit' variant='outline'>
               Save Customer
             </Button>
           </CardFooter>

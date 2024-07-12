@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import * as z from "zod"
 import { useToast } from '@/components/ui/use-toast';
-import { upsertAnalisis, insertAnalisisBulk } from '@/lib/actions/analisis.actions';
+import { insertAnalisisBulk } from '@/lib/actions/analisis.actions';
 import { Analisis } from '@/lib/database/models/analisis.model';
 import { Textarea } from '@/components/ui/textarea';
 import { usePathname } from 'next/navigation'
@@ -61,6 +61,7 @@ const AddAnalisisBulkForm = (
           costPublicUrgent: Number(columns[12]),
           addUrgentPrice: false,
           promo: '',
+          tests: []
         }
       })
       console.log('objects', objects);
@@ -139,7 +140,7 @@ const AddAnalisisBulkForm = (
           </div>
         </CardContent>
         <CardFooter>
-          <Button className='ml-auto' type='submit'>
+          <Button className='ml-auto' type='submit' variant={'outline'}> 
             Save Analisis
           </Button>
         </CardFooter>

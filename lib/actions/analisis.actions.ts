@@ -37,7 +37,6 @@ export async function insertAnalisis(newAnalisis: Analisis, pathname: string) {
     console.log(insertResponse);
 
     revalidatePath(pathname)
-
     return {
       success: true,
       data: JSON.parse(JSON.stringify(insertResponse))
@@ -83,6 +82,30 @@ export async function insertAnalisisBulk(newAnalisis: Analisis[], pathname: stri
     return {
       success: false,
       error: error.errorResponse.message
+    }
+  }
+}
+
+// READ
+export async function getPerfilsCount() {
+  try {
+    const db = await connectToDatabase();
+    const collection = db.collection('analisis');
+
+
+    const analisis = await collection.countDocuments({
+      tests: { $exists: true, $ne: [] }
+    });
+
+    return {
+      success: true,
+      data: analisis
+    }
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      error: 'Error while getting count of documents' + error.toString() || error
     }
   }
 }
@@ -134,6 +157,38 @@ export async function getAllAnalisisById(path: string, id: string, fields?: obje
       success: false,
       error: 'Error while getting analisis with id ' + id
     }
+  }
+}
+
+// READ
+export async function getAllPerfils(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<Analisis[] | []> {
+  try {
+    if (page < 0) throw new Error('Page cant be less than 0')
+    const db = await connectToDatabase();
+    const collection = db.collection('analisis');
+
+    const skip = query ? 0 : (page - 1) * resultsPerPage;
+
+    const projection = fields || {};
+
+    const analisis = await collection
+      .find<Analisis>(
+        {
+          name: new RegExp(query, 'i'),
+          tests: { $exists: true, $ne: [] }
+        }
+      )
+      .project(projection)
+      .sort({ noIktan: 1 })
+      .skip(skip)
+      .limit(resultsPerPage)
+      .toArray();
+    revalidatePath(path);
+
+    return JSON.parse(JSON.stringify(analisis));
+  } catch (error) {
+    console.log(error);
+    return []
   }
 }
 

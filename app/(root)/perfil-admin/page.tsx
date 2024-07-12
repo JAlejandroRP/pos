@@ -1,13 +1,14 @@
 import AnalisisTable from '@/components/shared/AnalisisTable'
 import { Button } from '@/components/ui/button'
-import { getAllAnalisis, getAnalisisCount } from '@/lib/actions/analisis.actions'
-import { useSearchParams } from 'next/navigation';
+import { getAllPerfils, getPerfilsCount } from '@/lib/actions/analisis.actions'
 import Link from 'next/link'
 import React from 'react'
 import Search from '@/components/shared/Search';
 import Pagination from '@/components/shared/TablePagination';
 
-const AnalisisAdminPage = async ({
+const PATHNAME = '/perfil-admin'
+
+const PerfilAdminPage = async ({
   searchParams,
 }: {
   searchParams?: {
@@ -20,23 +21,23 @@ const AnalisisAdminPage = async ({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 10;
-  const analisis = await getAllAnalisis('/analisis', currentPage, resultsPerPage, query)
+  const analisis = await getAllPerfils(PATHNAME, currentPage, resultsPerPage, query)
   const totalFilteredRows = analisis.length;
-  const totalRows = (await getAnalisisCount()).data || 0;
+  const totalRows = (await getPerfilsCount()).data || 0;
   const totalFilteredPages = Math.ceil(totalFilteredRows / resultsPerPage) < 1 ? 1 : (totalFilteredRows / resultsPerPage);
   const totalPages = Math.ceil(totalRows / resultsPerPage);
 
   return (
     <div className='w-full py-8'>
       <div className='flex justify-between'>
-        <Link href='/analisis-admin/add' passHref>
-          <Button role='a' variant={'outline'} className='hover:bg-gray-200'>
-            Add New Analisis
-          </Button>
-        </Link>
-        <Link href='/analisis-admin/add/bulk' passHref>
+        {/* <Link href='/analisis-admin/add/bulk' passHref>
           <Button role='a' variant={'outline'}>
             Add Bulk Analisis
+          </Button>
+        </Link> */}
+        <Link href='/perfil-admin/add' passHref>
+          <Button role='a' variant={'outline'} className='hover:bg-gray-200'>
+            Add New Perfil
           </Button>
         </Link>
       </div>
@@ -58,4 +59,4 @@ const AnalisisAdminPage = async ({
   )
 }
 
-export default AnalisisAdminPage
+export default PerfilAdminPage

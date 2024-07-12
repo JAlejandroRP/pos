@@ -1,9 +1,11 @@
-import AnalisisCardSmall from '@/components/shared/AnalisisCardSmall';
 import { Button } from '@/components/ui/button';
 import { getAllAnalisis } from '@/lib/actions/analisis.actions';
 import { ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
 
 import React from 'react'
+import { CHECKOUT_PATH } from '../checkout/page';
+import Cart from '@/components/shared/Cart';
 
 
 const AnalisisPage = async ({
@@ -20,32 +22,27 @@ const AnalisisPage = async ({
   const currentPage = Number(searchParams?.page) || 1;
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 1000;
   const analisis = await getAllAnalisis('/analisis', currentPage, resultsPerPage, "")
-
+  
   return (
     <section>
-      {/* <div className='py-8 bg-white'> */}
-        <header className="sticky top-0 z-10 bg-white pt-8 shadow-sm">
-          <div className='flex flex-row justify-between'>
+      <main>
+        <header className="sticky top-0 z-10 pt-8 shadow-sm backdrop-blur-sm">
+          <div className='flex flex-row justify-between backdrop-blur-sm'>
             <h2 className="my-7 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
               Analisis
             </h2>
-            <Button
-              className='ml-auto shrink-0 text-md'
-              variant='outline'
-            >
-              <ShoppingCart className='w-5 h-5 mr-2' />
-              Checkout (2)
-            </Button>
+            <Link href={CHECKOUT_PATH}>
+              <Button
+                className='ml-auto shrink-0 text-md'
+                variant='outline'
+              >
+                <ShoppingCart className='w-5 h-5 mr-2' />
+                Checkout
+              </Button>
+            </Link>
           </div>
         </header>
-      {/* </div> */}
-      <main>
-        <div
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6"
-        >
-          {analisis.map(analisis => <AnalisisCardSmall key={analisis._id.toString()} analisis={analisis} />)}
-        </div>
-
+        <Cart analisis={analisis} />
       </main>
     </section >
   )

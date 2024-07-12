@@ -6,6 +6,8 @@ import React from 'react'
 
 const CustomersPage = async () => {
   const customers = await getAllCustomersMongoDb();
+  console.log(customers);
+  
     
   return (
     <div className='w-full py-8'>

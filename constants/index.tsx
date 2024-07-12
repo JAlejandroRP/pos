@@ -49,6 +49,11 @@ export const navLinks = {
       icon: <PackageSearch className='h-4 w-4' />,
     },
     {
+      label: 'Perfil Admin',
+      route: '/perfil-admin',
+      icon: <PackageSearch className='h-4 w-4' />,
+    },
+    {
       label: 'Profile Admin',
       route: '/profile-admin',
       icon: <UserSquare className='h-4 w-4' />,

@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 import { Menu } from 'lucide-react';
 import { navLinks } from '@/constants';
-import { User } from '@/lib/database/models/user.model';
+// import type { User } from '@clerk/backend';
 
-const MobileNav = ({ user }: { user: User }) => {
+const MobileNav = ({ user }: { user: any }) => {
   const pathname = usePathname();
   return (
     <header className='flex justify-between items-center fixed h-16 w-full border-b-4 bg-white p-5 lg:hidden'>

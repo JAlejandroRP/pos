@@ -1,3 +1,5 @@
+import { Analisis } from "@/lib/database/models/analisis.model";
+
 declare type AddProductParams = {
   name: string;
   image?: string;
@@ -6,19 +8,6 @@ declare type AddProductParams = {
   category: string;
   details?: string;
 }
-
-// ====== USER PARAMS
-declare type CreateMongoDbUserParams = {
-  clerkId: string;
-  name: string;
-  photo: string;
-  role: string;
-  phone: string;
-  sex: string;
-  birthday: string;
-  direction?: string;
-  email?: string;
-};
 
 declare type CreateClerkUserParams = {
   name: string;
@@ -48,4 +37,11 @@ declare type ClerkApiError = {
       meta?: object
     }
   ]
+}
+
+declare type Cart = {
+  items: Analisis[]
+  total: Number,
+  subtotal: Number,
+  tax: Number
 }

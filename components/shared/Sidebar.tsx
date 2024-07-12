@@ -1,13 +1,13 @@
 "use client";
-
+// import type { User } from '@clerk/backend';
 import { navLinks } from '@/constants';
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import React from 'react'
 import { Button } from '../ui/button';
-import { User } from '@/lib/database/models/user.model';
 import { ModeToggle } from './ThemeSelector';
+import { User } from '@/lib/database/models/user.model';
 
 const Sidebar = ({ user }: { user: User }) => {
   const pathname = usePathname();
@@ -42,8 +42,8 @@ const Sidebar = ({ user }: { user: User }) => {
                   )
                 })
               }
-              </ul>
-              <ul>
+            </ul>
+            <ul>
               {
                 user.role === 'admin' &&
                 navLinks.admin.map(link => {
@@ -69,9 +69,13 @@ const Sidebar = ({ user }: { user: User }) => {
                 })
               }
               <li
-                className='justify-center items-center cursor-pointer gap-4 p-4'
+                className='flex justify-center items-center cursor-pointer gap-4 p-4'
               >
-                <UserButton showName />
+                <div className=''>
+                  <UserButton />
+                </div>
+                <span className='mr-auto'>{user.name || user.phone}</span>
+                <ModeToggle />
               </li>
             </ul>
           </SignedIn>
@@ -80,7 +84,6 @@ const Sidebar = ({ user }: { user: User }) => {
               <Link href='/sign-in'>Sign In</Link>
             </Button>
           </SignedOut>
-          <ModeToggle/>
         </nav>
       </div>
     </aside >

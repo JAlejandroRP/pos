@@ -1,15 +1,21 @@
 import MobileNav from '@/components/shared/MobileNav'
 import Sidebar from '@/components/shared/Sidebar'
 import { Toaster } from '@/components/ui/toaster'
+import { auth } from "@clerk/nextjs/server"
 import { getClerkCurrentUser } from '@/lib/actions/user.actions'
+// import { currentUser } from '@clerk/nextjs/server';
+
+// import { getClerkCurrentUser } from '@/lib/actions/user.actions'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getClerkCurrentUser();
-  // console.log(user);
+  // const user = await currentUser();
+  // let user = {id: 1}
+  console.log('user', user.data);
   
-  if(!user.success) {
+  if(!user.data) {
     redirect('/sign-in');
   }
 

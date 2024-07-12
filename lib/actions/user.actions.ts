@@ -4,6 +4,7 @@ import { connectToDatabase } from "../database/mongodb";
 import { ObjectId } from "mongodb";
 import { parseClerkApiError } from "../utils";
 import { clerkClient } from "@clerk/nextjs/server";
+import { User } from "../database/models/user.model";
 
 // CREATE
 export async function createClerkUser(
@@ -35,7 +36,7 @@ export async function createClerkUser(
 }
 
 // CREATE
-export async function createMongoDbUser(user: CreateMongoDbUserParams) {
+export async function createMongoDbUser(user: User) {
   try {
     user.role = user.email === 'dev.alerp@gmail.com' ? 'admin' : 'client';
     const db = await connectToDatabase();
@@ -82,7 +83,7 @@ export async function getAllCustomersMongoDb() {
   try {
     const db = await connectToDatabase();
 
-    const users = await db.collection('users').find({ role: "client" }).toArray();
+    const users = await db.collection('users').find().toArray();
 
     if (!users) return []
 

@@ -1,14 +1,14 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { AnalisisWithId } from '@/lib/database/models/analisis.model'
+import { Analisis } from '@/lib/database/models/analisis.model'
 import { ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
-const AnalisisCard = ({ analisis }: { analisis: AnalisisWithId }) => {
+const AnalisisCard = ({ analisis }: { analisis: Analisis }) => {
   const pathname = usePathname()
   const createAnalisisUrl = () => pathname + '/' + analisis._id;
 
@@ -25,9 +25,9 @@ const AnalisisCard = ({ analisis }: { analisis: AnalisisWithId }) => {
       <CardFooter className='mt-auto flex items-center justify-between py-6'>
         <span className="text-primary font-bold my-auto">${analisis.costPublic.toFixed(2)}</span>
         <Link
-          href={createAnalisisUrl()}
+          href={'#'}
         >
-          <Button size="sm" className="hover:bg-green-600 my-auto px-2"
+          <Button size="sm" variant='outline' className="hover:bg-green-600 my-auto px-2"
           >
             <ShoppingCart
               className='h-6 w-6 m-1'

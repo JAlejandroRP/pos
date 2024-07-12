@@ -79,16 +79,16 @@ export type AnalisisName = {
 }
 
 const AddAnalisisForm = ({
+  isPerfil,
   analisisList,
   analisisData
 }: {
+  isPerfil?: boolean,
   analisisList: AnalisisName[],
   analisisData?: Analisis
 }
 ) => {
-  // const [analisisList, setAnalisisList] = useState([])
   const pathname = usePathname()
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const initialValues: Analisis = {
     lab: analisisData?.lab || '',
@@ -131,11 +131,7 @@ const AddAnalisisForm = ({
     defaultValues: initialValues
   })
 
-  console.log(analisisData);
-
-
   const onSubmit = async (values: z.infer<typeof addAnalisisFormSchema>) => {
-    setIsSubmitting(true);
     try {
       const createAnalisisResponse = await insertAnalisis({
         _id: analisisData?._id,
@@ -153,8 +149,8 @@ const AddAnalisisForm = ({
       }
       else {
         toast({
-          title: "Customer created!",
-          description: "You now can see the new customer.",
+          title: "Analisis created!",
+          description: "You now can see the new analisis.",
           duration: 5000,
           className: "success-toast",
         });
@@ -170,14 +166,13 @@ const AddAnalisisForm = ({
       console.log(error);
     }
     form.reset()
-    setIsSubmitting(false)
   }
 
   return (
     <Card className='w-full max-w-4xl m-auto'>
       <CardHeader>
         <CardTitle>
-          Add New Analisis
+          Add New {`${isPerfil ? 'Perfil' : 'Analisis'}`}
         </CardTitle>
         <CardDescription>
           Fill out the form below to add a new analisis to your inventory.
@@ -372,7 +367,7 @@ const AddAnalisisForm = ({
             </div>
           </CardContent>
           <CardFooter>
-            <Button className='ml-auto' type='submit'>
+            <Button className='ml-auto' type='submit' variant={'outline'}>
               Save Analisis
             </Button>
           </CardFooter>
