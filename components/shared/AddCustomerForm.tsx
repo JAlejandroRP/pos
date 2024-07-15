@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import * as z from "zod";
 import { useToast } from '@/components/ui/use-toast';
 import { createClerkUser, createMongoDbUser } from '@/lib/actions/user.actions';
+import { usePathname, useRouter } from 'next/navigation';
 
 export const addCustomerFormSchema = z.object({
   name: z.string().min(1, { message: "Must enter a name" }).max(50, { message: "Name can't be longer than 50 characters" }),
@@ -35,6 +36,8 @@ type AddCustomerFormValues = z.infer<typeof addCustomerFormSchema>;
 const AddClientForm = (
   // productData?: AddProductParams
 ) => {
+  const { replace } = useRouter()
+  const pathname = usePathname();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const initialValues: AddCustomerFormValues = {
@@ -74,6 +77,8 @@ const AddClientForm = (
         }
         const createMongoUser = await createMongoDbUser(userToMongo)
 
+        replace(`/customers/${createMongoUser?.data.insertedId.toString()}/analisis/add`);
+
         toast({
           title: "Customer created!",
           description: "You now can see the new customer.",
@@ -101,9 +106,9 @@ const AddClientForm = (
         <CardTitle>
           Add New Customer
         </CardTitle>
-        <CardDescription>
-          Fill out the form below to add a new product to your inventory.
-        </CardDescription>
+        {/* <CardDescription>
+          Fullfill the fields to register a new customer
+        </CardDescription> */}
       </CardHeader>
       <Form {...form}>
         <form
@@ -123,18 +128,51 @@ const AddClientForm = (
                   />
                 }
               />
-              <CustomField
-                control={form.control}
-                name='birthday'
-                formLabel='Birthday'
-                className='w-full'
-                render={({ field }) =>
-                  <Input
-                    type='date'
-                    {...field}
-                  />
-                }
-              />
+              <div className='grid md:grid-cols-2 gap-6'>
+                <CustomField
+                  control={form.control}
+                  name='birthday'
+                  formLabel='Birthday'
+                  className='w-full'
+                  render={({ field }) =>
+                    <Input
+                      type='date'
+                      {...field}
+                    />
+                  }
+                />
+                <CustomField
+                  control={form.control}
+                  name='sex'
+                  formLabel='Sex'
+                  className='w-full'
+                  render={({ field }) =>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col"
+                    // className="flex flex-row h-10 justify-between items-center px-10"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="M" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Masculine
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="F" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Femenine
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  }
+                />
+              </div>
               <CustomField
                 control={form.control}
                 name='email'
@@ -168,44 +206,15 @@ const AddClientForm = (
                   <Input {...field} placeholder='' />
                 }
               />
-              <CustomField
-                control={form.control}
-                name='sex'
-                formLabel='Sex'
-                className='w-full'
-                render={({ field }) =>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-col"
-                  // className="flex flex-row h-10 justify-between items-center px-10"
-                  >
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="M" />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        Masculine
-                      </FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="F" />
-                      </FormControl>
-                      <FormLabel className="font-normal">
-                        Femenine
-                      </FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                }
-              />
+              <div className='flex flex-row justify-center items-center'>
+                <Button className='mt-8' type='submit' variant='outline'>
+                  Save Customer
+                </Button>
+              </div>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button className='ml-auto' type='submit' variant='outline'>
-              Save Customer
-            </Button>
-          </CardFooter>
+          {/* <CardFooter>
+          </CardFooter> */}
         </form>
       </Form>
     </Card >

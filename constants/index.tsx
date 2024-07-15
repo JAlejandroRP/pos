@@ -1,4 +1,4 @@
-import { Home, Box, User, Users , Receipt, Landmark, PackageSearch, Microscope, UserSquare, ClipboardPlus, } from 'lucide-react';
+import { Home, Box, User, Users, Receipt, Landmark, PackageSearch, Microscope, UserSquare, ClipboardPlus, } from 'lucide-react';
 
 export const MIN_PAGE = 1
 export const MAX_RESULTS = 9999
@@ -60,6 +60,13 @@ export const navLinks = {
     },
   ]
 }
+
+export const mainPageOptions = [
+  { title: 'Process new Analisis', route: '/customers/add' },
+  { title: 'Sales Per Month', route: '#' },
+  { title: 'Pending Analisis', route: '#' },
+  { title: 'Analisis Completed Today', route: '#' },
+]
 
 export const AddProductDefaultValues = {
   name: '',

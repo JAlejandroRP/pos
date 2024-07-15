@@ -1,14 +1,14 @@
 "use server";
 import { auth } from "@clerk/nextjs/server"
 import { connectToDatabase } from "../database/mongodb";
-import { ObjectId } from "mongodb";
+import { InsertOneResult, ObjectId } from "mongodb";
 import { parseClerkApiError } from "../utils";
 import { clerkClient } from "@clerk/nextjs/server";
 import { User } from "../database/models/user.model";
 
 // CREATE
 export async function createClerkUser(
-  user: CreateClerkUserParams
+  user: User
 ) {
   try {
     const newClerkUser = await clerkClient.users.createUser({
@@ -42,9 +42,12 @@ export async function createMongoDbUser(user: User) {
     const db = await connectToDatabase();
     const collection = db.collection('users')
 
-    collection.insertOne(user)
+    const insertedUser:InsertOneResult = await collection.insertOne(user)
 
-    return JSON.parse(JSON.stringify(user));
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(insertedUser)) as InsertOneResult
+    }
   } catch (error) {
     console.log(error);
   }

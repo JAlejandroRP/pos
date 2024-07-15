@@ -14,7 +14,6 @@ import { useToast } from '@/components/ui/use-toast';
 import { getAllAnalisis, insertAnalisis } from '@/lib/actions/analisis.actions';
 import { Analisis } from '@/lib/database/models/analisis.model';
 import { usePathname } from 'next/navigation';
-import { useRouter } from 'next/router'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
 import { Check, ChevronsUpDown } from 'lucide-react';

@@ -7,46 +7,51 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
+import { useToast } from '../ui/use-toast'
 
-const AnalisisCardSmall = ({
+const AnalisisListItem = ({
   analisis,
-  // cartHasItem,
+  cartHasItem,
   removeCartItem,
   addCartItem
 }: {
   analisis: Analisis,
-  // cartHasItem: boolean,
+  cartHasItem?: boolean,
   removeCartItem: Function,
   addCartItem: Function,
 }) => {
   const pathname = usePathname()
   const createAnalisisUrl = () => pathname + '/' + analisis._id;
+  const { toast } = useToast()
+
+
+  const toastSuccess = () => toast({
+    title: "Item added to cart",
+    duration: 5000,
+    className: "success-toast",
+  });
 
   return (
-    <Card className="flex flex-col h-full" >
-      <Link
-        href={createAnalisisUrl()}
-      >
-        <CardHeader className='flex-grow flex-row'>
-          <CardTitle className='flex-grow line-clamp-2'>
-            <div>
-              {analisis.noIktan} - {analisis.code}
-            </div></CardTitle>
-        </CardHeader>
-        <CardContent className='flex flex-grow flex-col pb-1'>
-          <div className='line-clamp-4 text-md capitalize'>
-            {analisis.name.toLowerCase()}
+    <Card className="grid grid-cols-4 w-full mb-2" >
+      <CardHeader className=''>
+        <CardTitle className='text-md'>
+          <div>
+            {analisis.noIktan} - {analisis.code}
           </div>
-        </CardContent>
-      </Link>
-      <CardFooter className='mt-auto flex items-center justify-between py-6'>
-        <span className="text-primary font-bold my-auto">${analisis.costPublic.toFixed(2)}</span>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className='p-2 col-span-2 m-auto'>
+        {analisis.name.toLowerCase()}
+      </CardContent>
+      <CardFooter className='p-2 flex flex-row justify-between items-center'>
+        <span className="text-primary font-bold my-auto">
+          ${analisis.costPublic.toFixed(2)}
+        </span>
         <Link
-          // href={createAnalisisUrl()}
           className='max-w-10'
           href={'#'}
         >
-          {/* {cartHasItem ?
+          {cartHasItem ?
             <Button size='sm' variant={'outline'} onClick={() => removeCartItem(analisis)} className='px-2 text-red-700'>
               <X
                 className='h-5 w-5'
@@ -58,11 +63,11 @@ const AnalisisCardSmall = ({
               <ShoppingCart
                 className='h-5 w-5 '
               />
-            </Button>} */}
+            </Button>}
         </Link>
       </CardFooter>
     </Card>
   )
 }
 
-export default AnalisisCardSmall
+export default AnalisisListItem

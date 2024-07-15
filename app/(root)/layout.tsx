@@ -13,7 +13,6 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getClerkCurrentUser();
   // const user = await currentUser();
   // let user = {id: 1}
-  console.log('user', user.data);
   
   if(!user.data) {
     redirect('/sign-in');

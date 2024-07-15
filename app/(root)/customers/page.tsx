@@ -12,7 +12,6 @@ const CustomersPage = async () => {
   return (
     <div className='w-full py-8'>
       <div className='flex justify-between'>
-        {/* <h1>Customers Admin Page</h1> */}
         <Link href='/customers/add' passHref>
           <Button role='a' variant='outline' className='hover:bg-gray-200'>
             Add New Customer
@@ -23,14 +22,6 @@ const CustomersPage = async () => {
         {customers && <CustomersTable customers={customers} />}
       </div>
     </div>
-    // <div className='w-full flex justify-between'>
-    //   CustomersPage
-    //   <Link href={'/customers/add'}>
-    //     <Button>
-    //       Add New Customer
-    //     </Button>
-    //   </Link>
-    // </div>
   )
 }
 

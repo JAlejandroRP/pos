@@ -1,107 +1,50 @@
 "use client"
 import { Analisis } from '@/lib/database/models/analisis.model'
 import React from 'react'
-import AnalisisCardSmall from './AnalisisCardSmall'
+import AnalisisListItem from './AnalisisListItem'
 import { useToast } from '../ui/use-toast'
+import AnalisisCardSmall from './AnalisisCardSmall'
+import { useRouter } from 'next/navigation'
+import { addItem, removeItem } from '@/lib/actions/cart.actions'
+// import { set } from '@/lib/redis/redis'
 
 type Cart = {
-  total: number,
-  subtotal: number,
   tax: number,
   items: Analisis[]
 }
 
-export const cleanCart = () => {
-  window.localStorage.removeItem("myCart");
-}
-
-export const getCart = (): Cart => {
-  // object
-  const cart = window.localStorage.getItem("myCart");
-
-  if (cart)
-    return JSON.parse(cart) as Cart;
-
-  const newCart: Cart = {
-    items: [],
-    subtotal: 0,
-    total: 0,
-    tax: Number(process.env.TAX_PCT) || 0.16,
-  }
-
-  localStorage.setItem("myCart", JSON.stringify(newCart));
-
-  return newCart;
-}
-
-const Cart = ({ analisis }: { analisis: Analisis[] }) => {
-  const { toast } = useToast();
-
-  const removeCartItem = (item: Analisis) => {
-    let cart = getCart()
-
-    if (cart.items.length === 0) return;
-
-    cart.items = cart.items.filter(e => e._id !== item._id)
-    cart.subtotal = cart.items.reduce(
-      (accumulator, currentValue) => accumulator + currentValue.costPublic,
-      0,
-    )
-
-    localStorage.setItem("myCart", JSON.stringify(cart))
-    toast({
-      title: "Item removed from cart",
-      duration: 5000,
-      className: '',
-    });
-  }
-
-
+const Cart = ({ analisis, asList, cart }: { analisis: Analisis[], asList?: boolean, cart: Cart }) => {
   const cartHasItem = (item: Analisis) => {
-    const cart = getCart()
-    const exits = cart.items.find(e => e._id === item._id)
+    const exits = cart!.items.find(e => e._id === item._id)
 
     if (exits && exits._id) return true
 
     return false
   }
 
-  const addCartItem = (item: Analisis) => {
-    let cart = getCart()
-
-    if (!cartHasItem(item)) {
-      cart.items.push(item);
-      cart.subtotal += item.costPublic;
-
-      localStorage.setItem("myCart", JSON.stringify(cart));
-      toast({
-        title: "Item added to cart",
-        duration: 5000,
-        className: "success-toast",
-      });
-    } else {
-      toast({
-        title: "Item is already in cart",
-        duration: 5000,
-        className: "success-toast",
-      });
-    }
-    console.log(cart);
-
-  }
-
   return (
     <div
-      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6"
+      className={`grid grid-cols-1 ${!asList ? 'sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6' : 'max-w-2xl m-auto'}`}
     >
-      {analisis.map(analisis =>
-        <AnalisisCardSmall
-          key={analisis._id!.toString()}
-          cartHasItem={cartHasItem(analisis)}
-          analisis={analisis}
-          addCartItem={addCartItem}
-          removeCartItem={removeCartItem}
-        />)}
+      {analisis.map(currAnalisis => {
+        if (asList) {
+          return <AnalisisListItem
+            key={currAnalisis._id!.toString()}
+            cartHasItem={cartHasItem(currAnalisis)}//cartHasItem(currAnalisis)}
+            analisis={currAnalisis}
+            addCartItem={addItem}
+            removeCartItem={removeItem}//removeCartItem}
+          />
+        }
+
+        return <AnalisisCardSmall
+          key={currAnalisis._id!.toString()}
+          // cartHasItem={cartHasItem(currAnalisis)}
+          analisis={currAnalisis}
+          addCartItem={addItem}
+          removeCartItem={() => { }}//removeCartItem}
+        />
+      })}
     </div>
   )
 }

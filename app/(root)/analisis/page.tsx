@@ -4,8 +4,9 @@ import { ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
 import React from 'react'
-import { CHECKOUT_PATH } from '../checkout/page';
+import { CHECKOUT_PATH } from '../checkout/[id]/page';
 import Cart from '@/components/shared/Cart';
+import { getCart } from '@/lib/actions/cart.actions';
 
 
 const AnalisisPage = async ({
@@ -17,12 +18,13 @@ const AnalisisPage = async ({
     resultsPerPage?: string,
   },
 }) => {
+  const cart = await getCart()
   const params = new URLSearchParams(searchParams);
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 1000;
   const analisis = await getAllAnalisis('/analisis', currentPage, resultsPerPage, "")
-  
+
   return (
     <section>
       <main>
@@ -42,7 +44,11 @@ const AnalisisPage = async ({
             </Link>
           </div>
         </header>
-        <Cart analisis={analisis} />
+        {/* <Cart
+          cart={cart}
+          analisis={analisis}
+          asList
+        /> */}
       </main>
     </section >
   )
