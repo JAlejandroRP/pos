@@ -11,8 +11,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import * as z from "zod";
 import { useToast } from '@/components/ui/use-toast';
-import { getAllAnalisis, insertAnalisis } from '@/lib/actions/analisis.actions';
-import { Analisis } from '@/lib/database/models/analisis.model';
+import { getAllAnalysis, insertAnalysis } from '@/lib/actions/analysis.actions';
+import { Analysis } from '@/lib/database/models/analysis.model';
 import { usePathname } from 'next/navigation';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
@@ -20,7 +20,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '../ui/command';
 import { ObjectId } from 'mongodb';
 
-export const addAnalisisFormSchema = z.object({
+export const addAnalysisFormSchema = z.object({
   // _id: z.string(),
   // _id: z.preprocess((value) => {
   //   return new ObjectId(value )
@@ -72,75 +72,72 @@ export const addAnalisisFormSchema = z.object({
   tests: z.string().array()
 })
 
-export type AnalisisName = {
+export type AnalysisName = {
   name: string,
   _id: ObjectId
 }
 
-const AddAnalisisForm = ({
+const AddAnalysisForm = ({
   isPerfil,
-  analisisList,
-  analisisData
+  AnalysisList,
+  AnalysisData
 }: {
   isPerfil?: boolean,
-  analisisList: AnalisisName[],
-  analisisData?: Analisis
+  AnalysisList: AnalysisName[],
+  AnalysisData?: Analysis
 }
 ) => {
   const pathname = usePathname()
   const { toast } = useToast();
-  const initialValues: Analisis = {
-    lab: analisisData?.lab || '',
-    noIktan: analisisData?.noIktan || 0,
-    code: analisisData?.code || '',
-    name: analisisData?.name || '',
-    deliveryTime: analisisData?.deliveryTime || 0,
-    type: analisisData?.type || '',
-    cost: analisisData?.cost || 0,
-    costUrgent: analisisData?.costUrgent || 0,
-    costPublic: analisisData?.costPublic || 0,
-    costPublicUrgent: analisisData?.costPublicUrgent || 0,
-    addUrgentPrice: analisisData?.addUrgentPrice || false,
-    promo: analisisData?.promo || '',
-    tests: analisisData?.tests || [],
-    // _id: analisisData?._id || new ObjectId()
+  const initialValues: Analysis = {
+    lab: AnalysisData?.lab || '',
+    noIktan: AnalysisData?.noIktan || 0,
+    code: AnalysisData?.code || '',
+    name: AnalysisData?.name || '',
+    deliveryTime: AnalysisData?.deliveryTime || 0,
+    type: AnalysisData?.type || '',
+    cost: AnalysisData?.cost || 0,
+    costPublic: AnalysisData?.costPublic || 0,
+    promo: AnalysisData?.promo || '',
+    tests: AnalysisData?.tests || [],
+    // _id: AnalysisData?._id || new ObjectId()
   }
 
-  const addAnalisisToPerfil = (analisis: string) => {
-    let currAnalisis = form.getValues().tests
+  const addAnalysisToPerfil = (Analysis: string) => {
+    let currAnalysis = form.getValues().tests
 
-    const index = currAnalisis.indexOf(analisis)
+    const index = currAnalysis.indexOf(Analysis)
 
     if (index >= 0) {
-      currAnalisis = currAnalisis.filter(e => e !== analisis)
-      console.log('filtered', currAnalisis);
+      currAnalysis = currAnalysis.filter(e => e !== Analysis)
+      console.log('filtered', currAnalysis);
 
-      form.setValue("tests", currAnalisis)
+      form.setValue("tests", currAnalysis)
       // console.log(form.getValues().tests);
       return;
     }
 
-    currAnalisis.push(analisis)
-    form.setValue("tests", currAnalisis)
+    currAnalysis.push(Analysis)
+    form.setValue("tests", currAnalysis)
     console.log(form.getValues().tests)
   }
 
-  const form = useForm<z.infer<typeof addAnalisisFormSchema>>({
-    resolver: zodResolver(addAnalisisFormSchema),
+  const form = useForm<z.infer<typeof addAnalysisFormSchema>>({
+    resolver: zodResolver(addAnalysisFormSchema),
     defaultValues: initialValues
   })
 
-  const onSubmit = async (values: z.infer<typeof addAnalisisFormSchema>) => {
+  const onSubmit = async (values: z.infer<typeof addAnalysisFormSchema>) => {
     try {
-      const createAnalisisResponse = await insertAnalisis({
-        _id: analisisData?._id,
+      const createAnalysisResponse = await insertAnalysis({
+        _id: AnalysisData?._id,
         ...values
       }, pathname);
 
-      if (createAnalisisResponse.error) {
+      if (createAnalysisResponse.error) {
         toast({
           title: 'Something went wrong',
-          description: createAnalisisResponse.error,
+          description: createAnalysisResponse.error,
           duration: 5000,
           className: 'error-toast',
           variant: 'destructive'
@@ -148,8 +145,8 @@ const AddAnalisisForm = ({
       }
       else {
         toast({
-          title: "Analisis created!",
-          description: "You now can see the new analisis.",
+          title: "Analysis created!",
+          description: "You now can see the new Analysis.",
           duration: 5000,
           className: "success-toast",
         });
@@ -171,10 +168,10 @@ const AddAnalisisForm = ({
     <Card className='w-full max-w-4xl m-auto'>
       <CardHeader>
         <CardTitle>
-          Add New {`${isPerfil ? 'Perfil' : 'Analisis'}`}
+          Add New {`${isPerfil ? 'Perfil' : 'Analysis'}`}
         </CardTitle>
         <CardDescription>
-          Fill out the form below to add a new analisis to your inventory.
+          Fill out the form below to add a new Analysis to your inventory.
         </CardDescription>
       </CardHeader>
       <Form {...form}>
@@ -186,12 +183,12 @@ const AddAnalisisForm = ({
               <CustomField
                 control={form.control}
                 name='name'
-                formLabel='Analisis Name/Profile'
+                formLabel='Analysis Name/Profile'
                 className='w-full'
                 render={({ field }) =>
                   <Input
                     {...field}
-                    placeholder='Enter analisis name'
+                    placeholder='Enter Analysis name'
                   />
                   // <Input
                   //   type=''
@@ -315,24 +312,24 @@ const AddAnalisisForm = ({
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            Select analisis
+                            Select Analysis
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent className="w-full p-0">
                         <Command>
-                          <CommandInput placeholder="Search analisis..." />
+                          <CommandInput placeholder="Search Analysis..." />
                           <CommandList>
-                            <CommandEmpty>No analisis found.</CommandEmpty>
+                            <CommandEmpty>No Analysis found.</CommandEmpty>
                             <CommandGroup>
-                              {analisisList.map((anlisis) => (
+                              {AnalysisList.map((anlisis) => (
                                 <CommandItem
                                   className='text-xs'
                                   value={anlisis.name}
                                   key={anlisis._id.toString()}
                                   onSelect={() => {
-                                    addAnalisisToPerfil(anlisis.name)
+                                    addAnalysisToPerfil(anlisis.name)
                                   }}
                                 >
                                   <Check
@@ -367,7 +364,7 @@ const AddAnalisisForm = ({
           </CardContent>
           <CardFooter>
             <Button className='ml-auto' type='submit' variant={'outline'}>
-              Save Analisis
+              Save Analysis
             </Button>
           </CardFooter>
         </form>
@@ -376,4 +373,4 @@ const AddAnalisisForm = ({
   )
 }
 
-export default AddAnalisisForm
+export default AddAnalysisForm

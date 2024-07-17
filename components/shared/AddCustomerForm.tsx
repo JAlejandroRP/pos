@@ -77,7 +77,7 @@ const AddClientForm = (
         }
         const createMongoUser = await createMongoDbUser(userToMongo)
 
-        replace(`/customers/${createMongoUser?.data.insertedId.toString()}/analisis/add`);
+        replace(`/customers/${createMongoUser?.data.insertedId.toString()}/Analysis/add`);
 
         toast({
           title: "Customer created!",

@@ -1,15 +1,14 @@
 'use client'
 import React from 'react'
 import { ColumnDef } from '@tanstack/react-table'
-import { AnalisisWithId } from '@/lib/database/models/analisis.model'
 import { DataTable } from '@/components/ui/data-table'
-import { deleteAnalisis } from '@/lib/actions/analisis.actions'
+import { deleteAnalysis } from '@/lib/actions/analysis.actions'
 import { Trash2 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import TablePagination from './TablePagination'
 import Link from 'next/link'
+import { Analysis } from '@/lib/database/models/analysis.model'
 
-export const columns: ColumnDef<AnalisisWithId>[] = [
+export const columns: ColumnDef<Analysis>[] = [
   // {
   //   accessorKey: "_id",
   //   header: "Id",
@@ -31,7 +30,7 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
     // size: 250,
     maxSize: 250,
     cell: ({ row }) => (<div>
-      <Link href={`/analisis-admin/update/${row.original._id}`}>
+      <Link href={`/Analysis-admin/update/${row.original._id}`}>
         {row.original.name}
       </Link>
     </div>),
@@ -92,7 +91,7 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
               onClick={async () => {
                 const ids = table.getState().rowSelection as Object
                 const idsToDelete = Object.keys(ids)
-                const deleteResponse = await deleteAnalisis(idsToDelete, pathname)
+                const deleteResponse = await deleteAnalysis(idsToDelete, pathname)
                 table.setRowSelection({})
               }}
               className='hover:scale-110'
@@ -116,28 +115,24 @@ export const columns: ColumnDef<AnalisisWithId>[] = [
   },
 ]
 
-const AnalisisTable = ({
+const AnalysisTable = ({
   page,
   totalRows,
   search,
   resultsPerPage,
-  analisis
+  Analysis
 }: {
   page: number,
   totalRows: number,
   search: string,
   resultsPerPage: number,
-  analisis: AnalisisWithId[]
+  Analysis: Analysis[]
 }) => {
   return (
-    <div>
-      {/* <button onClick={columns.he}>hola</button> */}
-      <DataTable columns={columns} data={analisis} />
-      {/* <TablePagination
-        totalPages={totalPages}
-      /> */}
+    <div className='shadow-lg'>
+      <DataTable columns={columns} data={Analysis} />
     </div>
   )
 }
 
-export default AnalisisTable
+export default AnalysisTable

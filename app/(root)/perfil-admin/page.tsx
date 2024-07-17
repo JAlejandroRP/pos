@@ -1,10 +1,10 @@
-import AnalisisTable from '@/components/shared/AnalisisTable'
 import { Button } from '@/components/ui/button'
-import { getAllPerfils, getPerfilsCount } from '@/lib/actions/analisis.actions'
+import { getAllPerfils, getPerfilsCount } from '@/lib/actions/analysis.actions'
 import Link from 'next/link'
 import React from 'react'
 import Search from '@/components/shared/Search';
-import Pagination from '@/components/shared/TablePagination';
+import Pagination from '@/components/shared/Pagination';
+import AnalysisTable from '@/components/shared/AnalysisTable';
 
 const PATHNAME = '/perfil-admin'
 
@@ -21,8 +21,8 @@ const PerfilAdminPage = async ({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 10;
-  const analisis = await getAllPerfils(PATHNAME, currentPage, resultsPerPage, query)
-  const totalFilteredRows = analisis.length;
+  const analysis = await getAllPerfils(PATHNAME, currentPage, resultsPerPage, query)
+  const totalFilteredRows = analysis.length;
   const totalRows = (await getPerfilsCount()).data || 0;
   const totalFilteredPages = Math.ceil(totalFilteredRows / resultsPerPage) < 1 ? 1 : (totalFilteredRows / resultsPerPage);
   const totalPages = Math.ceil(totalRows / resultsPerPage);
@@ -30,28 +30,27 @@ const PerfilAdminPage = async ({
   return (
     <div className='w-full py-8'>
       <div className='flex justify-between'>
-        {/* <Link href='/analisis-admin/add/bulk' passHref>
+        {/* <Link href='/Analysis-admin/add/bulk' passHref>
           <Button role='a' variant={'outline'}>
-            Add Bulk Analisis
+            Add Bulk Analysis
           </Button>
         </Link> */}
         <Link href='/perfil-admin/add' passHref>
-          <Button role='a' variant={'outline'} className='hover:bg-gray-200'>
+          <Button role='a' variant={'outline'} className='hover:bg-gray-200 shadow-md'>
             Add New Perfil
           </Button>
         </Link>
       </div>
       <div className="mt-4 flex flex-row items-center justify-between gap-2 md:mt-8">
-        <Search placeholder="Search analisis..." />
+        <Search placeholder="Search Analysis..." />
       </div>
-      <div className='p-2'>Total Rows: {totalRows}, Total Pages {totalPages}</div>
-      <div className='mt-2'>
-        {analisis && <AnalisisTable
+      <div className='mt-8'>
+        {analysis && <AnalysisTable
           page={currentPage}
           resultsPerPage={resultsPerPage}
           totalRows={totalFilteredRows}
           search={query}
-          analisis={analisis}
+          Analysis={analysis}
         />}
         <Pagination totalPages={query === '' ? totalPages : totalFilteredPages} />
       </div>

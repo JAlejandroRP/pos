@@ -18,7 +18,8 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: "name",
     header: "Name",
     enableSorting: true,
-    size: 250
+    // size: 250
+    maxSize: 150,
   },
   {
     accessorKey: "email",
@@ -28,14 +29,17 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "phone",
     header: "Phone",
+    maxSize: 100,
   },
   {
     accessorKey: "direction",
     header: "Direction",
+    maxSize: 100,
   },
   {
     accessorKey: "sex",
     header: "Sex",
+    maxSize: 50,
   },
   {
     maxSize: 70,
@@ -56,7 +60,7 @@ export const columns: ColumnDef<User>[] = [
           disabled={!row.getCanSelect()}
           onChange={row.getToggleSelectedHandler()}
         />
-        <Link href={`/customers/${row.original._id}/analisis/add`}>
+        <Link href={`/customers/${row.original._id}/analysis/add`}>
           <Microscope className='h-5 w-5' />
         </Link>
       </div>
@@ -66,11 +70,7 @@ export const columns: ColumnDef<User>[] = [
 
 const CustomersTable = ({ customers }: { customers: User[] }) => {
   return (
-    <div>
-      <Button onClick={() => {
-        window.localStorage.removeItem("cart");
-      }
-      }>Clean cart</Button>
+    <div className=''>
       <DataTable columns={columns} data={customers} />
     </div >
   )

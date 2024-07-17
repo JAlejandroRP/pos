@@ -4,6 +4,15 @@ export const MIN_PAGE = 1
 export const MAX_RESULTS = 9999
 export const EMPTY_QUERY = ''
 
+export enum analysisStatus {
+  in_progress = 'in_progress',
+  received = 'received',
+  canceled = 'canceled',
+  completed = 'completed',
+  collection_pending = 'collection_pending',
+  other = 'other',
+}
+
 export const navLinks = {
   customer: [
     {
@@ -12,8 +21,8 @@ export const navLinks = {
       icon: <Home className='h-4 w-4' />,
     },
     {
-      label: 'Analisis',
-      route: '/analisis',
+      label: 'Analysis',
+      route: '/analysis',
       icon: <Microscope className='h-4 w-4' />,
     },
     // {
@@ -22,8 +31,8 @@ export const navLinks = {
     //   icon: <Box className='h-4 w-4' />,
     // },
     {
-      label: 'My Analisis',
-      route: '/my-analisis',
+      label: 'My Analysis',
+      route: '/my-analysis',
       icon: <ClipboardPlus className='h-4 w-4' />,
     },
     {
@@ -34,8 +43,8 @@ export const navLinks = {
   ],
   admin: [
     // {
-    //   label: 'Analisis',
-    //   route: '/analisis',
+    //   label: 'Analysis',
+    //   route: '/Analysis',
     //   icon: <Microscope className='h-4 w-4' />,
     // },
     {
@@ -44,8 +53,8 @@ export const navLinks = {
       icon: <Users className='h-4 w-4' />,
     },
     {
-      label: 'Analisis Admin',
-      route: '/analisis-admin',
+      label: 'Analysis Admin',
+      route: '/analysis-admin',
       icon: <PackageSearch className='h-4 w-4' />,
     },
     {
@@ -62,10 +71,10 @@ export const navLinks = {
 }
 
 export const mainPageOptions = [
-  { title: 'Process new Analisis', route: '/customers/add' },
+  { title: 'Process new Analysis', route: '/customers/add' },
   { title: 'Sales Per Month', route: '#' },
-  { title: 'Pending Analisis', route: '#' },
-  { title: 'Analisis Completed Today', route: '#' },
+  { title: 'Pending Analysis', route: '#' },
+  { title: 'Analysis Completed Today', route: '#' },
 ]
 
 export const AddProductDefaultValues = {

@@ -1,7 +1,8 @@
 "use server";
-import Cart from "@/components/shared/Cart";
+// import Cart from "@/components/shared/Cart";
 import { connectToRedis } from "../redis/redis"
-import { Analisis } from "../database/models/analisis.model";
+import { Analysis } from "../database/models/analysis.model";
+import { Cart } from "@/types";
 
 export const getCart = async (): Promise<Cart | null> => {
   const redis = await connectToRedis()
@@ -16,20 +17,28 @@ export const getCart = async (): Promise<Cart | null> => {
 export const setCart = async (cart: Cart) => {
   const redis = await connectToRedis()
   const setResult = await redis.set('cart', JSON.stringify(cart))
-  console.log('new cart',cart);
+  // console.log('new cart',cart);
   return setResult === 'OK'
 }
 
-export const addItem = async (item: Analisis) => {
+export const removeCart = async () => {
+  const redis = await connectToRedis()
+  const setResult = await redis.del('cart')
+  // console.log('cart removed');
+  return setResult > 0;
+}
+
+export const addItem = async (item: Analysis) => {
   const cart = await getCart()
 
   if (cart) {
     cart.items.push(item)
-    console.log('adding item', await setCart(cart));
+    await setCart(cart);
+    // console.log('adding item', await setCart(cart));
   }
 }
 
-export const removeItem = async (item: Analisis) => {
+export const removeItem = async (item: Analysis) => {
   let cart = await getCart();
   if (cart) {
 
@@ -45,6 +54,6 @@ export const newCart = async () => {
   }
 
   await setCart(newCart)
-  console.log('created new cart');
+  // console.log('created new cart');
   return newCart
 }

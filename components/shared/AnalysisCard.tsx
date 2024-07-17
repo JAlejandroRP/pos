@@ -1,29 +1,29 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Analisis } from '@/lib/database/models/analisis.model'
+import { Analysis } from '@/lib/database/models/analysis.model'
 import { ShoppingCart } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
-const AnalisisCard = ({ analisis }: { analisis: Analisis }) => {
+const AnalysisCard = ({ Analysis }: { Analysis: Analysis }) => {
   const pathname = usePathname()
-  const createAnalisisUrl = () => pathname + '/' + analisis._id;
+  const createAnalysisUrl = () => pathname + '/' + Analysis._id;
 
   return (
     <Card className="flex flex-col h-full max-w-2xl m-auto" >
       <CardHeader className='flex-grow flex-row'>
-        <CardTitle className='flex-grow capitalize'>{analisis.name.toLowerCase()}</CardTitle>
+        <CardTitle className='flex-grow capitalize'>{Analysis.name.toLowerCase()}</CardTitle>
       </CardHeader>
       <CardContent className='flex flex-grow flex-col pb-1'>
         <div className='line-clamp-4 text-md capitalize'>
-          Code: {analisis.code}
+          Code: {Analysis.code}
         </div>
       </CardContent>
       <CardFooter className='mt-auto flex items-center justify-between py-6'>
-        <span className="text-primary font-bold my-auto">${analisis.costPublic.toFixed(2)}</span>
+        <span className="text-primary font-bold my-auto">${Analysis.costPublic.toFixed(2)}</span>
         <Link
           href={'#'}
         >
@@ -39,4 +39,4 @@ const AnalisisCard = ({ analisis }: { analisis: Analisis }) => {
   )
 }
 
-export default AnalisisCard
+export default AnalysisCard

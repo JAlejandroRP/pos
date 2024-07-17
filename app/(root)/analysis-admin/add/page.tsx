@@ -7,7 +7,7 @@ const AddProductPage = async () => {
   
   return (
     <div className='py-8 m-auto'>
-      <AddAnalysisForm AnalysisList={Analysis} isPerfil
+      <AddAnalysisForm AnalysisList={Analysis}
       />
     </div>
   )

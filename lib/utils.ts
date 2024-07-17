@@ -1,7 +1,7 @@
 import { ClerkApiError } from "@/types"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from 'tailwind-merge'
-import { Analisis } from "./database/models/analisis.model"
+import { Analysis } from "./database/models/Analysis.model"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

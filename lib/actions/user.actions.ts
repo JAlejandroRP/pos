@@ -14,7 +14,7 @@ export async function createClerkUser(
     const newClerkUser = await clerkClient.users.createUser({
       firstName: user.name,
       phoneNumber: ['+52' + user.phone],
-      password: process.env.CLERK_DEFAULT_PASSWORD || '@analisis321',
+      password: process.env.CLERK_DEFAULT_PASSWORD || '@Analysis321',
       privateMetadata: { role: 'client' },
       createdAt: new Date(),
     })
@@ -76,9 +76,15 @@ export async function getUserByMongoId(userId: string) {
 
     if (!user) throw new Error("User not found");
 
-    return JSON.parse(JSON.stringify(user));
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(user)) as User
+    }
   } catch (error) {
-    console.log(error);
+    return{
+      success: false,
+      error: 'Error while getting user from mongo'
+    }
   }
 }
 

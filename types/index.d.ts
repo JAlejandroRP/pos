@@ -1,4 +1,4 @@
-import { Analisis } from "@/lib/database/models/analisis.model";
+import { Analysis } from "@/lib/database/models/Analysis.model";
 
 declare type AddProductParams = {
   name: string;
@@ -40,8 +40,8 @@ declare type ClerkApiError = {
 }
 
 declare type Cart = {
-  items: Analisis[]
-  total: Number,
-  subtotal: Number,
+  items: Analysis[]
+  // total: Number,
+  // subtotal: Number,
   tax: Number
 }

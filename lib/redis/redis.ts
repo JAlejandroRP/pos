@@ -4,25 +4,28 @@ type RedisConnection = {
   client: RedisClientType<RedisDefaultModules & RedisModules, RedisFunctions, RedisScripts> | null
 }
 
-let cached: RedisConnection = (global as any).redis
+let redisCached: RedisConnection = (global as any).redis
 
-if (!cached) {
-  cached = (global as any).redis = {
+if (!redisCached) {
+  redisCached = (global as any).redis = {
     client: null
   }
 }
 
 export const connectToRedis = async (): Promise<RedisClientType<RedisDefaultModules & RedisModules, RedisFunctions, RedisScripts>> => {
-  if (cached.client && cached.client.isOpen) return cached.client;
+  console.log('is cached?', redisCached)
+  if (redisCached.client && redisCached.client.isOpen) return redisCached.client;
 
-  if (cached.client && !cached.client.isOpen) {
-    await cached.client.connect()
-    return cached.client;
+  console.log('cached is open?', redisCached)
+  if (redisCached.client && !redisCached.client.isOpen) {
+    await redisCached.client.connect()
+    return redisCached.client;
   }
+  console.log('cached', redisCached)
 
   if (!process.env.REDIS_URL) throw new Error('Missing REDIS_URL');
 
-  cached.client = createClient({
+  redisCached.client = createClient({
     password: process.env.REDIS_PW,
     socket: {
       host: process.env.REDIS_URL,
@@ -30,7 +33,10 @@ export const connectToRedis = async (): Promise<RedisClientType<RedisDefaultModu
     }
   });
 
-  cached.client.on('error', (err: any) => console.log(err));
+  if(!redisCached.client.isOpen) await redisCached.client.connect()
+  console.log('client created', redisCached)
 
-  return cached.client
+  redisCached.client.on('error', (err: any) => console.log(err));
+
+  return redisCached.client
 }

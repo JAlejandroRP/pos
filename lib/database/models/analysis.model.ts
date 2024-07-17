@@ -1,10 +1,10 @@
 import { ObjectId } from "mongodb";
 
-// export interface AnalisisWithId extends Analisis {
+// export interface AnalysisWithId extends Analysis {
 //   _id: ObjectId | string,
 // }
 
-export type Analisis = {
+export type Analysis = {
   _id?: ObjectId,
   name: string,
   tests: string[],
@@ -14,9 +14,9 @@ export type Analisis = {
   deliveryTime: number,
   type: string,
   cost: number,
-  costUrgent: number,
+  // costUrgent: number,
   costPublic: number,
-  costPublicUrgent: number,
-  addUrgentPrice: boolean,
+  // costPublicUrgent: number,
+  // addUrgentPrice: boolean,
   promo: string,
 }

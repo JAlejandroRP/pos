@@ -7,18 +7,18 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import * as z from "zod"
 import { useToast } from '@/components/ui/use-toast';
-import { insertAnalisisBulk } from '@/lib/actions/analisis.actions';
-import { Analisis } from '@/lib/database/models/analisis.model';
+import { insertAnalysisBulk } from '@/lib/actions/analysis.actions';
+import { Analysis } from '@/lib/database/models/analysis.model';
 import { Textarea } from '@/components/ui/textarea';
 import { usePathname } from 'next/navigation'
 
-const AddAnalisisBulkForm = (
+const AddAnalysisBulkForm = (
 ) => {
   const pathname = usePathname()
   const [bulkData, setBulkData] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  // const initialValues: Analisis = {
+  // const initialValues: Analysis = {
   //   lab: '',
   //   noIktan: 0,
   //   code: '',
@@ -37,8 +37,8 @@ const AddAnalisisBulkForm = (
     setBulkData(event.target.value)
   }
 
-  // const form = useForm<z.infer<typeof addAnalisisFormSchema>>({
-  //   resolver: zodResolver(addAnalisisFormSchema),
+  // const form = useForm<z.infer<typeof addAnalysisFormSchema>>({
+  //   resolver: zodResolver(addAnalysisFormSchema),
   //   defaultValues: initialValues
   // })
 
@@ -46,7 +46,7 @@ const AddAnalisisBulkForm = (
     event.preventDefault()
     setIsSubmitting(true);
     try {
-      const objects: Analisis[] = bulkData.split('\n').map(row => {
+      const objects: Analysis[] = bulkData.split('\n').map(row => {
         const columns = row.split(',')
         return {
           lab: columns[0],
@@ -66,7 +66,7 @@ const AddAnalisisBulkForm = (
       })
       console.log('objects', objects);
 
-      const bulkInsertResponse = await insertAnalisisBulk(objects, pathname)
+      const bulkInsertResponse = await insertAnalysisBulk(objects, pathname)
       console.log(bulkInsertResponse);
 
 
@@ -81,8 +81,8 @@ const AddAnalisisBulkForm = (
       }
       else {
         toast({
-          title: "Analisis created!",
-          description: "You now can see the new analisis.",
+          title: "Analysis created!",
+          description: "You now can see the new Analysis.",
           duration: 5000,
           className: "success-toast",
         });
@@ -104,7 +104,7 @@ const AddAnalisisBulkForm = (
     <Card className='w-full max-w-4xl mx-auto'>
       <CardHeader>
         <CardTitle>
-          Add Bulk Analisis
+          Add Bulk Analysis
         </CardTitle>
         <CardDescription>
           Enter comma separated values
@@ -129,7 +129,7 @@ const AddAnalisisBulkForm = (
                 render={({ field }) =>
                   <Textarea
                     {...field}
-                    placeholder='Enter analisis name'
+                    placeholder='Enter Analysis name'
                   />
                   // <Input
                   //   type=''
@@ -141,7 +141,7 @@ const AddAnalisisBulkForm = (
         </CardContent>
         <CardFooter>
           <Button className='ml-auto' type='submit' variant={'outline'}> 
-            Save Analisis
+            Save Analysis
           </Button>
         </CardFooter>
       </form>
@@ -150,4 +150,4 @@ const AddAnalisisBulkForm = (
   )
 }
 
-export default AddAnalisisBulkForm
+export default AddAnalysisBulkForm

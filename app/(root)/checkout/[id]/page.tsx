@@ -21,7 +21,7 @@ const CheckoutPage = async (
       </div>
     )
   return (
-    <div>No cart found</div>
+    <div>Please add items to the cart</div>
   )
 }
 
