@@ -1,5 +1,6 @@
 import CartSummary from '@/components/shared/CartSummary'
 import { getCart } from '@/lib/actions/cart.actions'
+import { getUserByMongoId } from '@/lib/actions/user.actions'
 import React from 'react'
 
 export const CHECKOUT_PATH = '/checkout'
@@ -9,13 +10,16 @@ const CheckoutPage = async (
     { params: { id: string } }
 ) => {
   const cart = await getCart()
-  
+  const user = await getUserByMongoId(id)
+ 
+  if(!user.data || user.error) return <div>Error ocurred {user.error}</div>
+
 
   if (cart)
     return (
       <div>
         <CartSummary
-          userId={id}
+          user={user.data}
           cart={cart}
         />
       </div>

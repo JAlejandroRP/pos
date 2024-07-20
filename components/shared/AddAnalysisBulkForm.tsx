@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import * as z from "zod"
 import { useToast } from '@/components/ui/use-toast';
-import { insertAnalysisBulk } from '@/lib/actions/analysis.actions';
+import { insertAnalysisBulk } from '@/lib/actions/perfil.actions';
 import { Analysis } from '@/lib/database/models/analysis.model';
 import { Textarea } from '@/components/ui/textarea';
 import { usePathname } from 'next/navigation'

@@ -6,7 +6,7 @@ import { Collection, ObjectId } from "mongodb";
 import { AnalysisStatus } from "../database/models/analysisStatus.model";
 
 // CREATE
-export async function insert(newStatus: AnalysisStatus, pathname: string) {
+export async function insertAnalysisStatus(newStatus: AnalysisStatus, pathname: string) {
   try {
     const db = await connectToDatabase();
     const status: Collection<AnalysisStatus> = db.collection('analysisStatus')
@@ -20,6 +20,7 @@ export async function insert(newStatus: AnalysisStatus, pathname: string) {
       {
         "$set": {
           analysis: newStatus.analysis,
+          perfils: newStatus.perfils,
           user: newStatus.user,
           status: newStatus.status,
           pdfUrl: newStatus.pdfUrl,
@@ -104,7 +105,7 @@ async function createIndex(collection: Collection<AnalysisStatus>, field: string
 //   }
 // }
 // READ
-export async function getById(id: string) {
+export async function getAnalysisStatusById(id: string) {
   try {
     const db = await connectToDatabase();
     const collection = db.collection('analysisStatus');
@@ -148,7 +149,7 @@ export async function getCount() {
 }
 
 // READ
-export async function getAll(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<AnalysisStatus[] | []> {
+export async function getAllAnalysisStatus(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<AnalysisStatus[] | []> {
   try {
     if (page < 0) throw new Error('Page cant be less than 0')
     const db = await connectToDatabase();

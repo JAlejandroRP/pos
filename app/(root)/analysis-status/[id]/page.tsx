@@ -1,6 +1,6 @@
 // import React from 'react'
 import { redirect } from "next/navigation";
-import { getById } from "@/lib/actions/analysisStatus.actions";
+import { getById } from "@/lib/actions/perfil.actions";
 import AnalysisSatusCard from "@/components/shared/AnalysisStatusCard";
 // import AnalysisSatusCard from "@/components/shared/AnalisisStatusCard";
 

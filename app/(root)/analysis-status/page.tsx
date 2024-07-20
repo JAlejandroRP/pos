@@ -2,7 +2,8 @@
 import React from 'react'
 import Pagination from '@/components/shared/Pagination';
 import AnalysisStatusTable from '@/components/shared/AnalysisStatusTable';
-import { getAll, getCount } from '@/lib/actions/analysisStatus.actions';
+import { getCount } from '@/lib/actions/perfil.actions';
+import { getAllAnalysisStatus } from '@/lib/actions/status.actions';
 
 
 const AnalysisPage = async ({
@@ -19,11 +20,13 @@ const AnalysisPage = async ({
   const query = searchParams?.query || '';
   const currentPage = Number(searchParams?.page) || 1;
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 10;
-  const analysis = await getAll('/analysis', currentPage, resultsPerPage, query)
+  const analysis = await getAllAnalysisStatus('/analysis', currentPage, resultsPerPage, query)
   const totalFilteredRows = analysis.length;
   const totalRows = (await getCount()).data || 0;
   const totalFilteredPages = Math.ceil(totalFilteredRows / resultsPerPage) < 1 ? 1 : (totalFilteredRows / resultsPerPage);
   const totalPages = Math.ceil(totalRows / resultsPerPage);
+  console.log(analysis);
+  
   // const query = searchParams?.query || '';
   // const currentPage = Number(searchParams?.page) || 1;
   // const resultsPerPage = Number(searchParams?.resultsPerPage) || 1000;
@@ -35,7 +38,7 @@ const AnalysisPage = async ({
         <header className="sticky top-0 z-10 pt-8 shadow-sm backdrop-blur-sm">
           <div className='flex flex-row justify-between backdrop-blur-sm'>
             <h2 className="my-7 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0">
-              Analysis
+              Estado Pruebas
             </h2>
             {/* <Link href={CHECKOUT_PATH}>
               <Button

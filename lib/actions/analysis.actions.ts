@@ -13,27 +13,18 @@ export async function insertAnalysis(newAnalysis: Analysis, pathname: string) {
     const db = await connectToDatabase();
     const Analysis: Collection<Analysis> = db.collection(COLLECTION)
 
-    createIndex(Analysis, 'noIktan');
+    createIndex(Analysis, 'name');
 
     const insertResponse = await Analysis.updateOne(
       {
-        noIktan: newAnalysis.noIktan
+        _id: new ObjectId(newAnalysis._id) || new ObjectId()
       },
       {
         "$set": {
           name: newAnalysis.name,
-          tests: newAnalysis.tests,
-          code: newAnalysis.code,
-          lab: newAnalysis.lab,
-          noIktan: newAnalysis.noIktan,
-          deliveryTime: newAnalysis.deliveryTime,
           type: newAnalysis.type,
           cost: newAnalysis.cost,
-          // costUrgent: newAnalysis.costUrgent,
           costPublic: newAnalysis.costPublic,
-          // costPublicUrgent: newAnalysis.costPublicUrgent,
-          // addUrgentPrice: newAnalysis.addUrgentPrice,
-          promo: newAnalysis.promo,
         }
       }, { upsert: true })
     console.log(insertResponse);
@@ -119,11 +110,11 @@ export async function getAnalysisCount() {
     const collection = db.collection(COLLECTION);
 
 
-    const Analysis = await collection.countDocuments();
+    const analysis = await collection.countDocuments();
 
     return {
       success: true,
-      data: Analysis
+      data: analysis
     }
   } catch (error: any) {
     console.log(error);
@@ -163,36 +154,35 @@ export async function getAllAnalysisById(path: string, id: string, fields?: obje
 }
 
 // READ
-export async function getAllPerfils(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<Analysis[] | []> {
-  try {
-    if (page < 0) throw new Error('Page cant be less than 0')
-    const db = await connectToDatabase();
-    const collection = db.collection(COLLECTION);
+// export async function getAllPerfils(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<Analysis[] | []> {
+//   try {
+//     if (page < 0) throw new Error('Page cant be less than 0')
+//     const db = await connectToDatabase();
+//     const collection = db.collection(COLLECTION);
 
-    const skip = query ? 0 : (page - 1) * resultsPerPage;
+//     const skip = query ? 0 : (page - 1) * resultsPerPage;
 
-    const projection = fields || {};
+//     const projection = fields || {};
 
-    const Analysis = await collection
-      .find<Analysis>(
-        {
-          name: new RegExp(query, 'i'),
-          tests: { $exists: true, $ne: [] }
-        }
-      )
-      .project(projection)
-      .sort({ noIktan: 1 })
-      .skip(skip)
-      .limit(resultsPerPage)
-      .toArray();
-    revalidatePath(path);
+//     const Analysis = await collection
+//       .find<Analysis>(
+//         {
+//           name: new RegExp(query, 'i'),
+//         }
+//       )
+//       .project(projection)
+//       .sort({ noIktan: 1 })
+//       .skip(skip)
+//       .limit(resultsPerPage)
+//       .toArray();
+//     revalidatePath(path);
 
-    return JSON.parse(JSON.stringify(Analysis));
-  } catch (error) {
-    console.log(error);
-    return []
-  }
-}
+//     return JSON.parse(JSON.stringify(Analysis));
+//   } catch (error) {
+//     console.log(error);
+//     return []
+//   }
+// }
 
 // READ
 export async function getAllAnalysis(path: string, page: number, resultsPerPage: number, query: string, fields?: object): Promise<Analysis[] | []> {

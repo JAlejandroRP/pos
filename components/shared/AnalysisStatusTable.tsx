@@ -3,13 +3,15 @@ import React, { HTMLAttributes } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
 import { deleteAnalysis } from '@/lib/actions/analysis.actions'
-import { Trash2 } from 'lucide-react'
+import { SearchIcon, Trash2 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { AnalysisStatus } from '@/lib/database/models/analysisStatus.model'
 import { Badge } from '../ui/badge'
 import { analysisStatus } from '@/constants'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import Search from './Search'
+import { Perfil } from '@/lib/database/models/perfil.model'
 
 const colorStatus = (status: string) => {
   if (status === analysisStatus.in_progress) {
@@ -29,12 +31,28 @@ const colorStatus = (status: string) => {
   }
 }
 
+const getPerfilUser = (status: AnalysisStatus) => {
+  console.log(status);
+  
+  if (status.perfils)
+    return status.perfils[0].user.name
+  return ''
+}
+
 export const columns: ColumnDef<AnalysisStatus>[] = [
   {
     accessorKey: "creationDate",
-    header: "Creation Date",
-    maxSize: 70,
-    cell: ({ row }) => new Date(row.original.creationDate).toUTCString()
+    header: "Fecha",
+    maxSize: 50,
+    size:50,
+    cell: ({ row }) => new Date(row.original.creationDate).toDateString()
+  },
+  {
+    // accessorKey: "isUrgent",
+    header: "Empresa",
+    size: 50,
+    minSize:50,
+    cell: ({ row }) => getPerfilUser(row.original)
   },
   {
     accessorKey: "user.name",
@@ -47,7 +65,7 @@ export const columns: ColumnDef<AnalysisStatus>[] = [
     maxSize: 50,
     cell: ({ row }) => (
       <Link
-        href={`/analysis/${row.original._id}`}
+        href={`/analysis-status/${row.original._id}`}
       >
         <Button size={'sm'} variant={'outline'}
           className={`rounded-full ${colorStatus(row.original.status)} `}>
@@ -55,11 +73,6 @@ export const columns: ColumnDef<AnalysisStatus>[] = [
         </Button>
       </Link>
     )
-  },
-  {
-    accessorKey: "isUrgent",
-    header: "Is Urgent?",
-    size: 20,
   },
   {
     maxSize: 60,

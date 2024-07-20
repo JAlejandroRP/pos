@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { getAllPerfils, getPerfilsCount } from '@/lib/actions/analysis.actions'
+import { getAllPerfils, getPerfilsCount } from '@/lib/actions/perfil.actions'
 import Link from 'next/link'
 import React from 'react'
 import Search from '@/components/shared/Search';
@@ -36,21 +36,21 @@ const PerfilAdminPage = async ({
           </Button>
         </Link> */}
         <Link href='/perfil-admin/add' passHref>
-          <Button role='a' variant={'outline'} className='hover:bg-gray-200 shadow-md'>
+          <Button role='a' variant={'outline'} className='hover:bg-gray-200 shadow-lg'>
             Add New Perfil
           </Button>
         </Link>
       </div>
-      <div className="mt-4 flex flex-row items-center justify-between gap-2 md:mt-8">
+      <div className="mt-6 flex flex-row items-center justify-between gap-2">
         <Search placeholder="Search Analysis..." />
       </div>
-      <div className='mt-8'>
+      <div className='mt-6'>
         {analysis && <AnalysisTable
           page={currentPage}
           resultsPerPage={resultsPerPage}
           totalRows={totalFilteredRows}
           search={query}
-          Analysis={analysis}
+          perfils={analysis}
         />}
         <Pagination totalPages={query === '' ? totalPages : totalFilteredPages} />
       </div>

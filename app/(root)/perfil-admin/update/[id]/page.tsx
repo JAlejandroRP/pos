@@ -25,7 +25,7 @@ const UpdateAnalysisPage = async (
     <div>
       <div className='mt-8'>
         <AddAnalysisForm
-          AnalysisData={AnalysisData.data}
+          perfilData={AnalysisData.data}
           AnalysisList={AnalysisList as AnalysisName[]}
         />
       </div>

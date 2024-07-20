@@ -5,6 +5,9 @@ import { InsertOneResult, ObjectId } from "mongodb";
 import { parseClerkApiError } from "../utils";
 import { clerkClient } from "@clerk/nextjs/server";
 import { User } from "../database/models/user.model";
+import { revalidatePath } from "next/cache";
+
+const COLLECTION = 'users'
 
 // CREATE
 export async function createClerkUser(
@@ -42,7 +45,7 @@ export async function createMongoDbUser(user: User) {
     const db = await connectToDatabase();
     const collection = db.collection('users')
 
-    const insertedUser:InsertOneResult = await collection.insertOne(user)
+    const insertedUser: InsertOneResult = await collection.insertOne(user)
 
     return {
       success: true,
@@ -50,6 +53,10 @@ export async function createMongoDbUser(user: User) {
     }
   } catch (error) {
     console.log(error);
+    return {
+      success: false,
+      error: 'Could not create user'
+    }
   }
 }
 
@@ -81,9 +88,134 @@ export async function getUserByMongoId(userId: string) {
       data: JSON.parse(JSON.stringify(user)) as User
     }
   } catch (error) {
-    return{
+    return {
       success: false,
       error: 'Error while getting user from mongo'
+    }
+  }
+}
+
+export async function getPacients(path: string, page: number, resultsPerPage: number, query: string, fields?: object) {
+  try {
+    if (page < 0) throw new Error('Page cant be less than 0')
+    const db = await connectToDatabase();
+    const collection = db.collection(COLLECTION);
+
+    const skip = query ? 0 : (page - 1) * resultsPerPage;
+
+    const projection = fields || {};
+
+    const users = await collection
+      .find<User>(
+        {
+          $and: [
+            { name: new RegExp(query, 'i') },
+            { isParticular: false }
+          ]
+        }
+      )
+      .project(projection)
+      .sort({ noIktan: 1 })
+      .skip(skip)
+      .limit(resultsPerPage)
+      .toArray();
+
+    revalidatePath(path);
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(users)) as User[]
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: 'Could not get users'
+    }
+  }
+}
+
+// READ
+export async function getParticulars(path: string, page: number, resultsPerPage: number, query: string, fields?: object) {
+  try {
+    if (page < 0) throw new Error('Page cant be less than 0')
+    const db = await connectToDatabase();
+    const collection = db.collection(COLLECTION);
+
+    const skip = query ? 0 : (page - 1) * resultsPerPage;
+
+    const projection = fields || {};
+
+    const users = await collection
+      .find<User>(
+        {
+          $and: [
+            { name: new RegExp(query, 'i') },
+            { isParticular: true }
+          ]
+        }
+      )
+      .project(projection)
+      .sort({ noIktan: 1 })
+      .skip(skip)
+      .limit(resultsPerPage)
+      .toArray();
+
+    revalidatePath(path);
+
+    return {
+      success: true,
+      data: JSON.parse(JSON.stringify(users)) as User[]
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: 'Could not get users'
+    }
+  }
+}
+
+// READ
+export async function getParticularsCount() {
+  try {
+    const db = await connectToDatabase();
+    const collection = db.collection(COLLECTION);
+
+
+    const count = await collection.countDocuments({ isParticular: true });
+
+    return {
+      success: true,
+      data: count
+    }
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      error: 'Error while getting count of documents' + error.toString() || error
+    }
+  }
+}
+
+// READ
+export async function getPatientsCount() {
+  try {
+    const db = await connectToDatabase();
+    const collection = db.collection(COLLECTION);
+
+
+    const count = await collection.countDocuments({ isParticular: false });
+
+    return {
+      success: true,
+      data: count
+    }
+  } catch (error: any) {
+    console.log(error);
+    return {
+      success: false,
+      error: 'Error while getting count of documents' + error.toString() || error
     }
   }
 }
@@ -106,7 +238,7 @@ export async function getClerkCurrentUser() {
   try {
     const { userId } = auth();
     // console.log(userId);
-    
+
     if (!userId) return {
       success: false,
       error: 'Error while getting userClerkId'
@@ -115,14 +247,14 @@ export async function getClerkCurrentUser() {
     const user = await getUserByClerkId(userId);
 
     return {
-      success:true,
-      data:JSON.parse(JSON.stringify(user))
+      success: true,
+      data: JSON.parse(JSON.stringify(user))
     }
   } catch (error) {
     console.log(error);
     return {
-      success:false,
-      error:'User not found'
+      success: false,
+      error: 'User not found'
     }
   }
 }
