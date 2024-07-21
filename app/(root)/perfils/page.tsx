@@ -2,7 +2,7 @@
 import React from 'react'
 import Pagination from '@/components/shared/Pagination';
 import AnalysisStatusTable from '@/components/shared/AnalysisStatusTable';
-import { getAllPerfils, getCount } from '@/lib/actions/perfil.actions';
+import { getAllPerfils, getPerfilsCount } from '@/lib/actions/perfil.actions';
 import PerfilsTable from '@/components/shared/ParticularTable';
 
 const AnalysisPage = async ({
@@ -21,7 +21,7 @@ const AnalysisPage = async ({
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 10;
   const perfils = await getAllPerfils('/perfils', currentPage, resultsPerPage, query)
   const totalFilteredRows = perfils.length;
-  const totalRows = (await getCount()).data || 0;
+  const totalRows = (await getPerfilsCount()).data || 0;
   const totalFilteredPages = Math.ceil(totalFilteredRows / resultsPerPage) < 1 ? 1 : (totalFilteredRows / resultsPerPage);
   const totalPages = Math.ceil(totalRows / resultsPerPage);
   // const query = searchParams?.query || '';

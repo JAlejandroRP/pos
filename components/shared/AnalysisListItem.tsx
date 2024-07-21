@@ -25,10 +25,10 @@ const AnalysisListItem = ({
   const Total = () => {
     if ((data as Analysis).costPublic)
       return <>
-        {(data as Analysis).costPublic}
+        {(data as Analysis).costPublic.toLocaleString()}
       </>
     if ((data as Perfil).total) return <>
-      {(data as Perfil).total}
+      {(data as Perfil).total.toLocaleString()}
     </>
   }
   // const createAnalysisUrl = () => pathname + '/' + analysis._id;

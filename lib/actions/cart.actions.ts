@@ -18,21 +18,19 @@ export const getCart = async (): Promise<Cart | null> => {
 export const setCart = async (cart: Cart) => {
   const redis = await connectToRedis()
   const setResult = await redis.set('cart', JSON.stringify(cart))
-  // console.log('new cart',cart);
+
   return setResult === 'OK'
 }
 
 export const removeCart = async () => {
   const redis = await connectToRedis()
   const setResult = await redis.del('cart')
-  // console.log('cart removed');
+
   return setResult > 0;
 }
 
 export const addItem = async (item: (Analysis | Perfil)) => {
   const cart = await getCart()
-  console.log(cart);
-  
 
   if (cart) {
     if ((item as Perfil).total) {
@@ -64,6 +62,5 @@ export const newCart = async () => {
   }
 
   await setCart(newCart)
-  // console.log('created new cart');
   return newCart
 }

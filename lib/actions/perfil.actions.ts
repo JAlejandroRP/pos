@@ -39,10 +39,12 @@ export async function insertPerfil(perfil: Perfil, pathname: string) {
       }, { upsert: true })
     // console.log(insertResponse);
 
+
+
     revalidatePath(pathname)
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(insertResponse))
+      data: JSON.parse(JSON.stringify({ ...insertResponse, _id: insertResponse.upsertedId })) as Perfil
     }
   } catch (error: any) {
     console.log(Object.keys(error));
@@ -91,7 +93,7 @@ async function createIndex(collection: Collection<AnalysisStatus>, field: string
 
 
 // READ
-export async function getById(id: string) {
+export async function getPerfilById(id: string) {
   try {
     const db = await connectToDatabase();
     const collection = db.collection(COLLECTION);
@@ -113,7 +115,7 @@ export async function getById(id: string) {
 }
 
 // READ
-export async function getCount() {
+export async function getPerfilsCount() {
   try {
     const db = await connectToDatabase();
     const collection = db.collection(COLLECTION);

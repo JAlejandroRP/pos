@@ -16,6 +16,8 @@ import { useToast } from '../ui/use-toast';
 import { Perfil } from '@/lib/database/models/perfil.model';
 import { Analysis } from '@/lib/database/models/analysis.model';
 import { insertAnalysisStatus } from '@/lib/actions/status.actions';
+import { calculateSubtotal, calculateTax } from '@/lib/utils';
+import { newCart } from '@/lib/actions/cart.actions';
 
 const AnalysisItem = ({ analysis, isUrgent }: { analysis: Analysis, isUrgent: boolean }) => {
   return <div key={analysis._id!.toString()} className="flex items-center gap-4">
@@ -50,37 +52,18 @@ const PerfilItem = ({ perfil, isUrgent }: { perfil: Perfil, isUrgent: boolean })
   </div>
 }
 
-const calculateSubtotal = (cart: Cart, isUrgent: boolean) => {
-  const totalPerfils = cart.items.perfils?.reduce(
-    (acumulator, current) => acumulator + (
-      current.total
-    ),
-    0
-  ) || 0
-  const totalAnalysis = cart.items.analysis?.reduce(
-    (acumulator, current) => acumulator + (current.costPublic),
-    0
-  ) || 0
 
-  if (isUrgent) return (totalAnalysis + totalPerfils) * 1.2
-  return (totalAnalysis + totalPerfils)
-}
-
-const calculateTax = (subtotal: number) => {
-  return subtotal * (Number(process.env.TAX_PCT) || 0.16)
-}
 
 const CartSummary = ({ user, cart }: { user: User, cart: Cart }) => {
   const pathname = usePathname()
-  const router = useRouter()
+  const { replace } = useRouter()
   const [isUrgent, setIsUrgent] = useState(false)
   const [subtotal, setSubtotal] = useState(Number(calculateSubtotal(cart, false)))
   const [tax, setTax] = useState(calculateTax(subtotal))
   const { toast } = useToast();
   const [perfilName, setPerfilName] = useState("")
 
-  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const isCartEmpty = () => {
     if ((cart.items.perfils.length + cart.items.analysis.length) === 0
     ) {
       toast({
@@ -90,9 +73,12 @@ const CartSummary = ({ user, cart }: { user: User, cart: Cart }) => {
         className: 'error-toast',
         variant: 'destructive'
       })
-      return;
+      return true
     }
+    return false
+  }
 
+  const isParticularNameEmpty = () => {
     if (perfilName === '' && user.isParticular) {
       toast({
         title: 'Perfil sin nombre/descripción',
@@ -101,75 +87,93 @@ const CartSummary = ({ user, cart }: { user: User, cart: Cart }) => {
         className: 'error-toast',
         variant: 'destructive'
       })
+      return true;
+    }
+    return false;
+  }
+
+  const createNewPerfil = async () => {
+    const subtotal = calculateSubtotal(cart, isUrgent)
+    const tax = calculateTax(subtotal)
+    const total = subtotal + tax
+    const newPerfil: Perfil = {
+      analysis: cart.items.analysis,
+      total: total,
+      name: perfilName,
+      user: user
+    }
+
+    const response = await insertPerfil(newPerfil, pathname)
+
+    if (!response.success) {
+      toast({
+        title: 'Error',
+        description: 'No se ha podido crear el nuevo perfil',
+        duration: 5000,
+        className: 'success-toast',
+        variant: 'default'
+      })
       return;
     }
 
-    if (user.isParticular) {
-      const subtotal = calculateSubtotal(cart, isUrgent)
-      const tax = calculateTax(subtotal)
-      const total = subtotal + tax
-      const newPerfil: Perfil = {
-        analysis: cart.items.analysis,
-        total: total,
-        name: perfilName,
-        user: user
-      }
+    toast({
+      title: 'Exito',
+      description: 'Se ha creado el nuevo perfil',
+      duration: 5000,
+      className: 'success-toast',
+      variant: 'default'
+    })
 
-      const response = await insertPerfil(newPerfil, pathname)
-      console.log(response);
-      if (!response.success)
-        toast({
-          title: 'Error',
-          description: 'No se ha podido crear el nuevo perfil',
-          duration: 5000,
-          className: 'success-toast',
-          variant: 'default'
-        })
-      if (response.success)
-        toast({
-          title: 'Exito',
-          description: 'Se ha creado el nuevo perfil',
-          duration: 5000,
-          className: 'success-toast',
-          variant: 'default'
-        })
-    } else {
+    await newCart();
+    replace(`/perfils/${response.data?._id}`)
+  }
 
-
-      const newStatus: AnalysisStatus = {
-        analysis: cart.items.analysis,
-        perfils: cart.items.perfils,
-        completedDate: new Date(),
-        creationDate: new Date(),
-        pdfUrl: '',
-        status: analysisStatus.in_progress,
-        user: user,
-        isUrgent,
-      }
-      const response = await insertAnalysisStatus(newStatus, pathname)
-      if (!response.success)
-        toast({
-          title: 'Error',
-          description: 'No se han creado los analisis',
-          duration: 5000,
-          className: 'error-toast',
-          variant: 'destructive'
-        })
-      if (response.success)
-        toast({
-          title: 'Exito',
-          description: 'Se han creado los analisis',
-          duration: 5000,
-          className: 'success-toast',
-          variant: 'default'
-        })
-      // console.log(response);
+  const createNewAnalysisStatus = async () => {
+    const newStatus: AnalysisStatus = {
+      analysis: cart.items.analysis,
+      perfils: cart.items.perfils,
+      completedDate: new Date(),
+      creationDate: new Date(),
+      pdfUrl: '',
+      status: analysisStatus.in_progress,
+      user: user,
+      isUrgent,
     }
-    return ''
+    const response = await insertAnalysisStatus(newStatus, pathname)
+    if (!response.success)
+      toast({
+        title: 'Error',
+        description: 'No se han creado los analisis',
+        duration: 5000,
+        className: 'error-toast',
+        variant: 'destructive'
+      });
+
+    toast({
+      title: 'Exito',
+      description: 'Se han creado los analisis',
+      duration: 5000,
+      className: 'success-toast',
+      variant: 'default'
+    })
+    await newCart();
+    replace(`/analysis-status/${response.data?._id}`)
+  }
+
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    if (isCartEmpty() && isParticularNameEmpty()) return;
+
+    if (user.isParticular) {
+      await createNewPerfil()
+    } else {
+      await createNewAnalysisStatus()
+    }
   }
 
   if (!cart) {
-    router.back()
+    replace('/analysis-status')
   }
   else {
     return (

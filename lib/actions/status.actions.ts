@@ -34,7 +34,7 @@ export async function insertAnalysisStatus(newStatus: AnalysisStatus, pathname: 
     revalidatePath(pathname)
     return {
       success: true,
-      data: JSON.parse(JSON.stringify(insertResponse))
+      data: JSON.parse(JSON.stringify({ ...insertResponse, _id: insertResponse.upsertedId })) as AnalysisStatus
     }
   } catch (error: any) {
     console.log(Object.keys(error));
@@ -111,7 +111,7 @@ export async function getAnalysisStatusById(id: string) {
     const collection = db.collection('analysisStatus');
     const analysisStatus = await collection.findOne<AnalysisStatus>(new ObjectId(id));
 
-    if(!analysisStatus) throw new Error('Not found.')
+    if (!analysisStatus) throw new Error('Not found.')
 
     return {
       success: true,

@@ -27,7 +27,6 @@ export async function insertAnalysis(newAnalysis: Analysis, pathname: string) {
           costPublic: newAnalysis.costPublic,
         }
       }, { upsert: true })
-    console.log(insertResponse);
 
     revalidatePath(pathname)
     return {

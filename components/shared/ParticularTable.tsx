@@ -56,40 +56,16 @@ export const columns: ColumnDef<Perfil>[] = [
     maxSize: 30,
     id: 'select-col',
     header: ({ table }) => {
-      const rowsSelected = Object.keys(table.getState().rowSelection).length > 0;
-      const pathname = usePathname()
+      // const rowsSelected = Object.keys(table.getState().rowSelection).length > 0;
+      // const pathname = usePathname()
       return (
-        <div className={`flex ${rowsSelected ? 'justify-between' : 'flex-col'} items-center py-2`}>
-          <input
-            type='checkbox'
-            checked={table.getIsAllRowsSelected()}
-            // indeterminate={table.getIsSomeRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
-          />
-          {rowsSelected &&
-            <button
-              onClick={async () => {
-                const ids = table.getState().rowSelection as Object
-                const idsToDelete = Object.keys(ids)
-                const deleteResponse = await deleteAnalysis(idsToDelete, pathname)
-                table.setRowSelection({})
-              }}
-              className='hover:scale-110'
-            >
-              <Trash2 className='h-5 w-5' color='red' />
-            </button>
-          }
+        <div>
+          Ver perfil
         </div>
       )
     },
     cell: ({ row }) => (
       <div className='flex flex-row max-w-sm justify-between w-12 m-auto'>
-        <input
-          type='checkbox'
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-        />
         <Link href={`/perfils/${row.original._id}`}>
           <SearchIcon className='h-4 w-4' />
         </Link>

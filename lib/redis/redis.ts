@@ -13,15 +13,12 @@ if (!redisCached) {
 }
 
 export const connectToRedis = async (): Promise<RedisClientType<RedisDefaultModules & RedisModules, RedisFunctions, RedisScripts>> => {
-  console.log('is cached?', redisCached)
   if (redisCached.client && redisCached.client.isOpen) return redisCached.client;
 
-  console.log('cached is open?', redisCached)
   if (redisCached.client && !redisCached.client.isOpen) {
     await redisCached.client.connect()
     return redisCached.client;
   }
-  console.log('cached', redisCached)
 
   if (!process.env.REDIS_URL) throw new Error('Missing REDIS_URL');
 
@@ -34,7 +31,6 @@ export const connectToRedis = async (): Promise<RedisClientType<RedisDefaultModu
   });
 
   if(!redisCached.client.isOpen) await redisCached.client.connect()
-  console.log('client created', redisCached)
 
   redisCached.client.on('error', (err: any) => console.log(err));
 

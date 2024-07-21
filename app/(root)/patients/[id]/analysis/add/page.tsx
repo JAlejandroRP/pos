@@ -52,13 +52,10 @@ const AddAnalysisToCustomerPage = async ({
   const user = await getUserByMongoId(id)
   let cart = await getCart()
 
-  if (!cart || !cart.items.analysis || !cart.items.perfils) cart = await newCart()
-  if (!user.success || !user.data) redirect('/customers')
+  if (!cart) cart = await newCart()
+  if (!user.success || !user.data) redirect('/patients')
 
   const userAge = Math.abs(new Date(user.data.birthday).getFullYear() - new Date().getFullYear())
-
-  console.log(searchParams?.type);
-
 
   return (
     <section>
@@ -71,7 +68,7 @@ const AddAnalysisToCustomerPage = async ({
                   {user.data.isParticular ? 'Empresa: ' : 'Paciente'}
                 </div>
                 <div className='font-normal'>
-                  {user.data.name}, {userAge} years
+                  {user.data.name}, {userAge} años
                 </div>
               </div>
               <div className='flex flex-row justify-between'>
@@ -98,7 +95,7 @@ const AddAnalysisToCustomerPage = async ({
                   variant='outline'
                 >
                   <ShoppingCart className='w-5 h-5 mr-2' />
-                  {user.data.isParticular ? 'Crear Analisis' : 'Pedir Analisis'}
+                  {user.data.isParticular ? 'Crear Analisis' : `Pedir Analisis (${cart.items.analysis.length + cart.items.perfils.length})`}
                 </Button>
               </Link>
               <div>

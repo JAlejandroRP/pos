@@ -2,7 +2,7 @@
 import React from 'react'
 import Pagination from '@/components/shared/Pagination';
 import AnalysisStatusTable from '@/components/shared/AnalysisStatusTable';
-import { getCount } from '@/lib/actions/perfil.actions';
+import { getPerfilsCount } from '@/lib/actions/perfil.actions';
 import { getAllAnalysisStatus } from '@/lib/actions/status.actions';
 
 
@@ -22,10 +22,9 @@ const AnalysisPage = async ({
   const resultsPerPage = Number(searchParams?.resultsPerPage) || 10;
   const analysis = await getAllAnalysisStatus('/analysis', currentPage, resultsPerPage, query)
   const totalFilteredRows = analysis.length;
-  const totalRows = (await getCount()).data || 0;
+  const totalRows = (await getPerfilsCount()).data || 0;
   const totalFilteredPages = Math.ceil(totalFilteredRows / resultsPerPage) < 1 ? 1 : (totalFilteredRows / resultsPerPage);
   const totalPages = Math.ceil(totalRows / resultsPerPage);
-  console.log(analysis);
   
   // const query = searchParams?.query || '';
   // const currentPage = Number(searchParams?.page) || 1;

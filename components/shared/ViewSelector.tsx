@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch } from '../ui/switch'
 import { Label } from '../ui/label'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
@@ -12,26 +12,30 @@ const ViewSelector = () => {
 
   const handleChange = () => {
     const params = new URLSearchParams(searchParams);
+
     if (ver === 'analysis') {
-      params.delete('type');
       params.set('type', ver);
     } else {
-      params.delete('type');
       params.set('type', ver);
     }
     replace(`${pathname}?${params.toString()}`);
   }
 
+  useEffect(() => {
+    handleChange()
+  }, [ver])
+
   return (
     <div className='flex flex-row justify-between'>
-      <Switch id="ver" onCheckedChange={() => {
-
-        setVer((prev) => prev === 'analysis' ? 'perfils' : 'analysis')
-        handleChange()
-      }} />
+      <Switch id="ver"
+        onClick={() => {
+          setVer((prev) => prev === 'analysis' ? 'perfils' : 'analysis')
+          handleChange()
+        }}
+      />
       <Label
         className='m-auto'
-        htmlFor="ver">Viendo: {ver === 'analysis' ? 'Perfiles' : 'Analisis'}</Label>
+        htmlFor="ver">Viendo: {ver === 'analysis' ? 'Analisis' : 'Perfiles'}</Label>
     </div>
   )
 }

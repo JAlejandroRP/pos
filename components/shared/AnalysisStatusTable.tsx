@@ -2,39 +2,30 @@
 import React, { HTMLAttributes } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
-import { deleteAnalysis } from '@/lib/actions/analysis.actions'
-import { SearchIcon, Trash2 } from 'lucide-react'
-import { usePathname } from 'next/navigation'
+import { Upload } from 'lucide-react'
 import { AnalysisStatus } from '@/lib/database/models/analysisStatus.model'
-import { Badge } from '../ui/badge'
 import { analysisStatus } from '@/constants'
 import { Button } from '../ui/button'
 import Link from 'next/link'
-import Search from './Search'
-import { Perfil } from '@/lib/database/models/perfil.model'
 
-const colorStatus = (status: string) => {
+const colorStatus = (status: string): { color: string, label: string } => {
   if (status === analysisStatus.in_progress) {
-    return '!text-orange-500'
+    return { color: '!text-orange-500', label: 'En progreso' }
   }
   if (status === analysisStatus.canceled) {
-    return '!text-red-500'
+    return { color: '!text-red-500', label: 'Cancelado' }
   }
   if (status === analysisStatus.collection_pending) {
-    return '!text-yellow-500'
+    return { color: '!text-yellow-500', label: 'Pendiente' }
   }
   if (status === analysisStatus.received) {
-    return '!text-green-500'
+    return { color: '!text-green-500', label: 'Recibido' }
   }
-  if (status === analysisStatus.other) {
-    return '!text-gray-500'
-  }
+  return { color: '!text-gray-500', label: 'Otro' }
 }
 
 const getPerfilUser = (status: AnalysisStatus) => {
-  console.log(status);
-  
-  if (status.perfils)
+  if (status.perfils.length > 0)
     return status.perfils[0].user.name
   return ''
 }
@@ -44,77 +35,51 @@ export const columns: ColumnDef<AnalysisStatus>[] = [
     accessorKey: "creationDate",
     header: "Fecha",
     maxSize: 50,
-    size:50,
+    size: 50,
     cell: ({ row }) => new Date(row.original.creationDate).toDateString()
   },
   {
     // accessorKey: "isUrgent",
     header: "Empresa",
     size: 50,
-    minSize:50,
+    minSize: 50,
     cell: ({ row }) => getPerfilUser(row.original)
   },
   {
     accessorKey: "user.name",
-    header: "Patient name",
+    header: "Nombre Paciente",
     maxSize: 70,
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "Estatus",
     maxSize: 50,
-    cell: ({ row }) => (
-      <Link
+    cell: ({ row }) => {
+      const { color, label } = colorStatus(row.original.status)
+      return <Link
         href={`/analysis-status/${row.original._id}`}
       >
         <Button size={'sm'} variant={'outline'}
-          className={`rounded-full ${colorStatus(row.original.status)} `}>
-          {row.original.status}
+          className={`rounded-full ${color} `}>
+          {label}
         </Button>
       </Link>
-    )
+    }
   },
   {
-    maxSize: 60,
-    id: 'select-col',
-    header: ({ table }) => {
-      const rowsSelected = Object.keys(table.getState().rowSelection).length > 0;
-      const pathname = usePathname()
-      return (
-        <div className={`flex ${rowsSelected ? 'justify-between' : 'flex-col'} items-center py-2`}>
-          <input
-            type='checkbox'
-            checked={table.getIsAllRowsSelected()}
-            // indeterminate={table.getIsSomeRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()} //or getToggleAllPageRowsSelectedHandler
-          />
-          {rowsSelected &&
-            <button
-              onClick={async () => {
-                const ids = table.getState().rowSelection as Object
-                const idsToDelete = Object.keys(ids)
-                const deleteResponse = await deleteAnalysis(idsToDelete, pathname)
-                table.setRowSelection({})
-              }}
-              className='hover:scale-110'
-            >
-              <Trash2 className='h-5 w-5' color='red' />
-            </button>
-          }
-        </div>
-      )
-    },
-    cell: ({ row }) => (
-      <div className='flex flex-col'>
-        <input
-          type='checkbox'
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-        />
+    id: 'action-col',
+    header: ({ table }) => (
+      <div className='flex flex-row'>
+        <span>Agregar resultado</span>
       </div>
     ),
-  },
+    maxSize: 60,
+    cell: ({ row }) => (
+      <Link href={'#'} className='m-auto flex flex-col'>
+        <Upload className='h-4 w-4 m-auto' />
+      </Link>
+    )
+  }
 ]
 
 const AnalysisStatusTable = ({

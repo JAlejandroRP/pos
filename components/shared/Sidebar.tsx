@@ -14,7 +14,7 @@ const Sidebar = ({ user }: { user: User }) => {
 
   return (
     // oculto siempre a no ser que sea lg
-    <aside className="hidden h-screen w-58 p-5 shadow-md lg:flex">
+    <aside className="hidden h-screen w-58 p-5 shadow-md lg:flex shadow-xl">
       <div className="flex size-full flex-col gap-4">
         {/* <Link href='/' className='sidebar-logo'/> */}
         <nav className='h-full flex-col justify-between md:flex md:gap-4'>

@@ -1,7 +1,7 @@
-import { ClerkApiError } from "@/types"
+import { Cart, ClerkApiError } from "@/types"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from 'tailwind-merge'
-import { Analysis } from "./database/models/Analysis.model"
+import { Analysis } from "./database/models/analysis.model"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -51,3 +51,23 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     totalPages,
   ];
 };
+
+export const calculateSubtotal = (cart: Cart, isUrgent: boolean) => {
+  const totalPerfils = cart.items.perfils?.reduce(
+    (acumulator, current) => acumulator + (
+      current.total
+    ),
+    0
+  ) || 0
+  const totalAnalysis = cart.items.analysis?.reduce(
+    (acumulator, current) => acumulator + (current.costPublic),
+    0
+  ) || 0
+
+  if (isUrgent) return (totalAnalysis + totalPerfils) * 1.2
+  return (totalAnalysis + totalPerfils)
+}
+
+export const calculateTax = (subtotal: number) => {
+  return subtotal * (Number(process.env.TAX_PCT) || 0.16)
+}

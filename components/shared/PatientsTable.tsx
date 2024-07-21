@@ -40,7 +40,7 @@ export const columns: ColumnDef<User>[] = [
     ),
     cell: ({ row }) => (
       <div className='w-full m-auto'>
-        <Link href={`/patients/${row.original._id}/analysis/add`}>
+        <Link href={`/patients/${row.original._id}/analysis/add?type=analysis`}>
           <Plus className='h-5 w-5 m-auto' />
         </Link>
       </div>

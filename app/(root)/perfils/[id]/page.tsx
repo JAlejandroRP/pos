@@ -1,8 +1,6 @@
-// import React from 'react'
 import { redirect } from "next/navigation";
-import { getById } from "@/lib/actions/perfil.actions";
-import AnalysisSatusCard from "@/components/shared/AnalysisStatusCard";
-// import AnalysisSatusCard from "@/components/shared/AnalisisStatusCard";
+import PerfilCard from "@/components/shared/PerfilCard";
+import { getPerfilById } from "@/lib/actions/perfil.actions";
 
 const AnalysisPage = async (
   { params: { id } }:
@@ -10,15 +8,17 @@ const AnalysisPage = async (
 ) => {
   // console.log(id);
 
-  const analysisStatus = await getById(id)
+  const perfil = await getPerfilById(id)
+  console.log(perfil);
+  
 
-  if (!analysisStatus.success || !analysisStatus.data)
-    redirect('/Analysis')
+  if (!perfil.success || !perfil.data)
+    redirect('/analysis')
 
   return (
     <div className="py-8">
-      <AnalysisSatusCard
-        analysisStatus={analysisStatus.data}
+      <PerfilCard
+        perfil={perfil.data}
       />
     </div>
   )
