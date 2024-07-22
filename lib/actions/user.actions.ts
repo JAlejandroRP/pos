@@ -43,7 +43,7 @@ export async function createMongoDbUser(user: User) {
   try {
     user.role = user.email === 'dev.alerp@gmail.com' ? 'admin' : 'client';
     const db = await connectToDatabase();
-    const collection = db.collection('users')
+    const collection = db.collection(COLLECTION)
 
     const insertedUser: InsertOneResult = await collection.insertOne(user)
 
@@ -65,7 +65,7 @@ export async function getUserByClerkId(userClerkId: string) {
   try {
     const db = await connectToDatabase();
 
-    const user = await db.collection('users').findOne({ clerkId: userClerkId });
+    const user = await db.collection(COLLECTION).findOne({ clerkId: userClerkId });
 
     if (!user) throw new Error("User not found");
 
@@ -79,7 +79,7 @@ export async function getUserByMongoId(userId: string) {
   try {
     const db = await connectToDatabase();
 
-    const user = await db.collection('users').findOne({ _id: new ObjectId(userId) });
+    const user = await db.collection(COLLECTION).findOne({ _id: new ObjectId(userId) });
 
     if (!user) throw new Error("User not found");
 
@@ -224,7 +224,7 @@ export async function getAllCustomersMongoDb() {
   try {
     const db = await connectToDatabase();
 
-    const users = await db.collection('users').find().toArray();
+    const users = await db.collection(COLLECTION).find().toArray();
 
     if (!users) return []
 

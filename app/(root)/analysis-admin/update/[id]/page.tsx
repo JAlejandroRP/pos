@@ -1,6 +1,6 @@
-import AddAnalysisForm, { AnalysisName } from '@/components/shared/AddAnalysisForm'
+import AddAnalysisForm from '@/components/shared/AddAnalysisForm'
 import { EMPTY_QUERY, MAX_RESULTS, MIN_PAGE } from '@/constants'
-import { getAllAnalysis, getAllAnalysisById } from '@/lib/actions/Analysis.actions'
+import { getAllAnalysis, getAllAnalysisById } from '@/lib/actions/analysis.actions'
 import { redirect } from 'next/navigation'
 import React from 'react'
 
@@ -11,10 +11,9 @@ const UpdateAnalysisPage = async (
   { params: { id } }:
     { params: { id: string } }
 ) => {
-  const AnalysisList = await getAllAnalysis(PATHNAME, MIN_PAGE, MAX_RESULTS, EMPTY_QUERY, { name: 1 });
-  const AnalysisData = await getAllAnalysisById(PATHNAME, id);
+  const analysisData = await getAllAnalysisById(PATHNAME, id);
 
-  if (!AnalysisData.success || !AnalysisData.data) redirect(PREV_PATHNAME);
+  if (!analysisData.success || !analysisData.data) redirect(PREV_PATHNAME);
 
   // const test = {
   //   ...AnalysisData.data,
@@ -25,8 +24,9 @@ const UpdateAnalysisPage = async (
     <div>
       <div className='mt-8'>
         <AddAnalysisForm
-          perfilData={AnalysisData.data}
-          AnalysisList={AnalysisList as AnalysisName[]}
+          // perfilData={AnalysisData.data}
+          analysisData={analysisData.data}
+          // analysisList={AnalysisList as AnalysisName[]}
         />
       </div>
     </div>

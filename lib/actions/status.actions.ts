@@ -5,11 +5,13 @@ import { connectToDatabase } from "../database/mongodb";
 import { Collection, ObjectId } from "mongodb";
 import { AnalysisStatus } from "../database/models/analysisStatus.model";
 
+const COLLECTION = 'analysisStatus'
+
 // CREATE
 export async function insertAnalysisStatus(newStatus: AnalysisStatus, pathname: string) {
   try {
     const db = await connectToDatabase();
-    const status: Collection<AnalysisStatus> = db.collection('analysisStatus')
+    const status: Collection<AnalysisStatus> = db.collection(COLLECTION)
 
     // createIndex(status, 'noIktan');
 
@@ -108,7 +110,7 @@ async function createIndex(collection: Collection<AnalysisStatus>, field: string
 export async function getAnalysisStatusById(id: string) {
   try {
     const db = await connectToDatabase();
-    const collection = db.collection('analysisStatus');
+    const collection = db.collection(COLLECTION);
     const analysisStatus = await collection.findOne<AnalysisStatus>(new ObjectId(id));
 
     if (!analysisStatus) throw new Error('Not found.')
@@ -130,7 +132,7 @@ export async function getAnalysisStatusById(id: string) {
 export async function getCount() {
   try {
     const db = await connectToDatabase();
-    const collection = db.collection('analysisStatus');
+    const collection = db.collection(COLLECTION);
 
 
     const Analysis = await collection.countDocuments();
@@ -153,7 +155,7 @@ export async function getAllAnalysisStatus(path: string, page: number, resultsPe
   try {
     if (page < 0) throw new Error('Page cant be less than 0')
     const db = await connectToDatabase();
-    const collection = db.collection('analysisStatus');
+    const collection = db.collection(COLLECTION);
 
     const skip = query ? 0 : (page - 1) * resultsPerPage;
 
