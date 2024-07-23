@@ -1,7 +1,7 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Analysis } from '@/lib/database/models/Analysis.model'
+import { Analysis } from '@/lib/database/models/analysis.model'
 import { Delete, ShoppingCart, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'

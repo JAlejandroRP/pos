@@ -13,62 +13,38 @@ export enum analysisStatus {
   other = 'other',
 }
 
-export const navLinks = {
-  customer: [
-    {
-      label: 'Inicio',
-      route: '/',
-      icon: <Home className='h-4 w-4' />,
-    },
-    {
-      label: 'Estado Pruebas',
-      route: '/analysis-status',
-      icon: <Microscope className='h-4 w-4' />,
-    },
-    {
-      label: 'Perfiles',
-      route: '/perfils',
-      icon: <PackageSearch className='h-4 w-4' />,
-    },
-    // {
-    //   label: 'My Analysis',
-    //   route: '/my-analysis',
-    //   icon: <ClipboardPlus className='h-4 w-4' />,
-    // },
-    // {
-    //   label: 'Profile',
-    //   route: '/profile',
-    //   icon: <User className='h-4 w-4' />,
-    // },
-  ],
-  admin: [
-    {
-      label: 'Pacientes',
-      route: '/patients',
-      icon: <Users className='h-4 w-4' />,
-    },
-    {
-      label: 'Particulares',
-      route: '/particulars',
-      icon: <Users2 className='h-4 w-4' />,
-    },
-    {
-      label: 'Analisis',
-      route: '/analysis-admin',
-      icon: <PackageSearch className='h-4 w-4' />,
-    },
-    // {
-    //   label: 'Perfil Admin',
-    //   route: '/perfil-admin',
-    //   icon: <PackageSearch className='h-4 w-4' />,
-    // },
-    // {
-    //   label: 'Profile Admin',
-    //   route: '/profile-admin',
-    //   icon: <UserSquare className='h-4 w-4' />,
-    // },
-  ]
-}
+export const navLinks = [
+  {
+    label: 'Inicio',
+    route: '/',
+    icon: <Home className='h-6 w-6' />,
+  },
+  {
+    label: 'Estado Pruebas',
+    route: '/analysis-status',
+    icon: <Microscope className='h-6 w-6' />,
+  },
+  {
+    label: 'Perfiles',
+    route: '/perfils',
+    icon: <PackageSearch className='h-6 w-6' />,
+  },
+  {
+    label: 'Pacientes',
+    route: '/patients',
+    icon: <Users className='h-6 w-6' />,
+  },
+  {
+    label: 'Particulares',
+    route: '/particulars',
+    icon: <Users2 className='h-6 w-6' />,
+  },
+  {
+    label: 'Analisis',
+    route: '/analysis-admin',
+    icon: <PackageSearch className='h-6 w-6' />,
+  },
+]
 
 export const mainPageOptions = [
   { title: 'Process new Analysis', route: '/customers/add' },

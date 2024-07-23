@@ -22,8 +22,8 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
     <main className="flex min-h-screen w-full flex-col lg:flex-row">
       <Sidebar user={user.data} />
       <MobileNav user={user.data}/>
-      <div className="flex-1 overflow-auto lg:mt-0 lg:max-h-screen">
-        <div className="max-w-7xl mx-auto px-1 md:px-10 w-full text-dark-400 p-16-regular">
+      <div className="flex-1 overflow-auto lg:mt-0 lg:max-h-screen ">
+        <div className="max-w-7xl mx-auto px-4 md:px-10 w-full text-dark-400 p-16-regular pt-16 lg:pt-0">
           {children}
         </div>
       </div>

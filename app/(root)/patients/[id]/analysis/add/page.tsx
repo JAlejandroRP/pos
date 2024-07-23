@@ -11,10 +11,6 @@ import ListItems from '@/components/shared/ListItems'
 import Search from '@/components/shared/Search'
 import Pagination from '@/components/shared/Pagination'
 import { getAllPerfils } from '@/lib/actions/perfil.actions'
-import { Analysis } from '@/lib/database/models/analysis.model'
-import { Perfil } from '@/lib/database/models/perfil.model'
-import { Input } from '@/components/ui/input'
-import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import ViewSelector from '@/components/shared/ViewSelector'
 
@@ -60,30 +56,30 @@ const AddAnalysisToCustomerPage = async ({
   return (
     <section>
       <main>
-        <header className="max-w-2xl m-auto sticky top-0 z-10 pt-8 shadow-sm backdrop-blur-sm">
-          <div className='flex flex-row justify-between backdrop-blur-sm'>
-            <div className="flex-auto my-2 scroll-m-20 pb-4 text-xl font-semibold tracking-tight transition-colors first:mt-0 max-w-sm flex-grow">
-              <div className='flex flex-row justify-between'>
-                <div>
+        <div className="max-w-2xl m-auto sticky top-0 z-10 pt-8 shadow-sm ">
+          <div className='flex flex-row justify-between'>
+            <div className="flex-auto my-2 scroll-m-20 pb-4 transition-colors first:mt-0 max-w-sm flex-grow">
+              <div className='flex lg:flex-row flex-col justify-between'>
+                <Label className='m-auto ml-2'>
                   {user.data.isParticular ? 'Empresa: ' : 'Paciente'}
-                </div>
-                <div className='font-normal'>
+                </Label>
+                <div className='font-medium ml-2'>
                   {user.data.name}, {userAge} años
                 </div>
               </div>
-              <div className='flex flex-row justify-between'>
-                <div>
+              <div className='flex lg:flex-row flex-col justify-between mt-2'>
+                <Label className='m-auto ml-2'>
                   Teléfono:
-                </div>
-                <div className='font-normal'>
+                </Label>
+                <div className='font-medium ml-2'>
                   {user.data.phone}
                 </div>
               </div>
-              <div className='flex flex-row justify-between'>
-                <div>
+              <div className='flex lg:flex-row flex-col justify-between mt-2'>
+                <Label className='m-auto ml-2'>
                   Correo:
-                </div>
-                <div className='font-normal'>
+                </Label>
+                <div className='font-medium ml-2'>
                   {user.data.email}
                 </div>
               </div>
@@ -98,7 +94,7 @@ const AddAnalysisToCustomerPage = async ({
                   {user.data.isParticular ? 'Crear Analisis' : `Pedir Analisis (${cart.items.analysis.length + cart.items.perfils.length})`}
                 </Button>
               </Link>
-              <div>
+              <div className='mb-4'>
                 <ViewSelector />
               </div>
             </div>
@@ -107,7 +103,7 @@ const AddAnalysisToCustomerPage = async ({
             underline
             placeholder='Buscar analisis'
           />
-        </header>
+        </div>
         <div className='max-w-2xl m-auto pt-4'>
           <ListItems
             cart={cart}

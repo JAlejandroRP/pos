@@ -8,22 +8,22 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
 
-const AnalysisCard = ({ Analysis }: { Analysis: Analysis }) => {
+const AnalysisCard = ({ analysis }: { analysis: Analysis }) => {
   const pathname = usePathname()
-  const createAnalysisUrl = () => pathname + '/' + Analysis._id;
+  const createAnalysisUrl = () => pathname + '/' + analysis._id;
 
   return (
     <Card className="flex flex-col h-full max-w-2xl m-auto" >
       <CardHeader className='flex-grow flex-row'>
-        <CardTitle className='flex-grow capitalize'>{Analysis.name.toLowerCase()}</CardTitle>
+        <CardTitle className='flex-grow capitalize'>{analysis.name.toLowerCase()}</CardTitle>
       </CardHeader>
       <CardContent className='flex flex-grow flex-col pb-1'>
         <div className='line-clamp-4 text-md capitalize'>
-          Code: {Analysis.code}
+          Code: {analysis.name}
         </div>
       </CardContent>
       <CardFooter className='mt-auto flex items-center justify-between py-6'>
-        <span className="text-primary font-bold my-auto">${Analysis.costPublic.toFixed(2)}</span>
+        <span className="text-primary font-bold my-auto">${analysis.costPublic.toFixed(2)}</span>
         <Link
           href={'#'}
         >

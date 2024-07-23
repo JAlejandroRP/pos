@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { Webhook } from "svix";
 
 import { createMongoDbUser } from "@/lib/actions/user.actions";
+import { User } from "@/lib/database/models/user.model";
 
 export async function POST(req: Request) {
   // You can find this in the Clerk Dashboard -> Webhooks -> choose the webhook
@@ -65,7 +66,7 @@ export async function POST(req: Request) {
   if (eventType === "user.created") {
     const { id, email_addresses, image_url, phone_numbers,first_name, last_name, username } = evt.data;
 
-    const user:CreateMongoDbUserParams = {
+    const user:User = {
       clerkId: id,
       email: email_addresses[0].email_address,
       name: username!,
@@ -73,6 +74,7 @@ export async function POST(req: Request) {
       phone: phone_numbers[0].phone_number,
       sex: 'M',
       role: 'admin',
+      isParticular: false,
       // firstName: first_name!,
       // lastName: last_name!,
       photo: image_url,
@@ -86,7 +88,7 @@ export async function POST(req: Request) {
     if (newUser) {
       await clerkClient.users.updateUserMetadata(id, {
         publicMetadata: {
-          userId: newUser._id,
+          userId: newUser.data?.insertedId,
         },
       });
     }

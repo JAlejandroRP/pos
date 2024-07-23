@@ -3,8 +3,6 @@ import { getCart } from '@/lib/actions/cart.actions'
 import { getUserByMongoId } from '@/lib/actions/user.actions'
 import React from 'react'
 
-export const CHECKOUT_PATH = '/checkout'
-
 const CheckoutPage = async (
   { params: { id } }:
     { params: { id: string } }

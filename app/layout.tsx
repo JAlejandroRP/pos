@@ -3,12 +3,13 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/shared/ThemeProvider";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "POS",
-  description: "POS",
+  title: "Sislab",
+  description: "Sislab CRM",
 };
 
 export default function RootLayout({
@@ -19,7 +20,8 @@ export default function RootLayout({
   return (
     <ClerkProvider signInFallbackRedirectUrl={'/'} signUpFallbackRedirectUrl={'/'}>
       <html lang="en" suppressHydrationWarning className="dark">
-        <body>
+        <body 
+        >
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

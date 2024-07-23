@@ -9,18 +9,18 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const AnalysisCardSmall = ({
-  Analysis,
+  analysis,
   // cartHasItem,
   removeCartItem,
   addCartItem
 }: {
-  Analysis: Analysis,
+  analysis: Analysis,
   // cartHasItem: boolean,
   removeCartItem: Function,
   addCartItem: Function,
 }) => {
   const pathname = usePathname()
-  const createAnalysisUrl = () => pathname + '/' + Analysis._id;
+  const createAnalysisUrl = () => pathname + '/' + analysis._id;
 
   return (
     <Card className="flex flex-col h-full" >
@@ -30,17 +30,17 @@ const AnalysisCardSmall = ({
         <CardHeader className='flex-grow flex-row'>
           <CardTitle className='flex-grow line-clamp-2'>
             <div>
-              {Analysis.noIktan} - {Analysis.code}
+              {analysis.name}
             </div></CardTitle>
         </CardHeader>
         <CardContent className='flex flex-grow flex-col pb-1'>
           <div className='line-clamp-4 text-md capitalize'>
-            {Analysis.name.toLowerCase()}
+            {analysis.name.toLowerCase()}
           </div>
         </CardContent>
       </Link>
       <CardFooter className='mt-auto flex items-center justify-between py-6'>
-        <span className="text-primary font-bold my-auto">${Analysis.costPublic.toFixed(2)}</span>
+        <span className="text-primary font-bold my-auto">${analysis.costPublic.toFixed(2)}</span>
         <Link
           // href={createAnalysisUrl()}
           className='max-w-10'
