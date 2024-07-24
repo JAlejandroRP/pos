@@ -1,5 +1,5 @@
 'use client'
-import React, { HTMLAttributes } from 'react'
+import React, { HTMLAttributes, useRef, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
 import { Upload } from 'lucide-react'
@@ -7,6 +7,31 @@ import { AnalysisStatus } from '@/lib/database/models/analysisStatus.model'
 import { analysisStatus } from '@/constants'
 import { Button } from '../ui/button'
 import Link from 'next/link'
+import { Input } from '../ui/input'
+import { uploadAnalysisStatus, uploadPdf } from '@/lib/actions/gdrive.actions'
+import { upsertAnalysisStatus } from '@/lib/actions/status.actions'
+import { usePathname } from 'next/navigation'
+
+const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, status: AnalysisStatus, setIsLoading: Function) => {
+  if (event.target.files) {
+    const file = event.target.files[0];
+    if (file.type === 'application/pdf') {
+      setIsLoading(true)
+      const file = event.target.files[0];
+      const data = new FormData()
+      data.append('file', file)
+      const response = await uploadPdf(`${status._id}`, data)
+      if (response.docId) {
+        await upsertAnalysisStatus({
+          ...status,
+          status: analysisStatus.completed
+        }, '/analysis-status')
+        setIsLoading(false)
+      }
+      setIsLoading(false)
+    }
+  }
+};
 
 const colorStatus = (status: string): { color: string, label: string } => {
   if (status === analysisStatus.in_progress) {
@@ -20,6 +45,9 @@ const colorStatus = (status: string): { color: string, label: string } => {
   }
   if (status === analysisStatus.received) {
     return { color: '!text-green-500', label: 'Recibido' }
+  }
+  if (status === analysisStatus.completed) {
+    return { color: '!text-green-500', label: 'Completado' }
   }
   return { color: '!text-gray-500', label: 'Otro' }
 }
@@ -68,18 +96,47 @@ export const columns: ColumnDef<AnalysisStatus>[] = [
   },
   {
     id: 'action-col',
-    header: ({ table }) => (
-      <div className='flex flex-row'>
-        <span>Agregar resultado</span>
-      </div>
-    ),
+    // header: ({ table }) => (
+    //   <div className='flex flex-row'>
+    //     <span>Agregar resultado</span>
+    //   </div>
+    // ),
+    size: 55,
     maxSize: 60,
-    cell: ({ row }) => (
-      <Link href={'#'} className='m-auto flex flex-col'>
-        <Upload className='h-4 w-4 m-auto' />
-      </Link>
-    )
-  }
+    cell: ({ row }) => {
+      const [isLoading, setIsLoading] = useState(false)
+
+      if(row.original.status === analysisStatus.completed)
+        return <span>Cambiar resultados</span>
+
+      return <div className=''>
+        {isLoading ? 'Subiendo archivo...' :
+          <label htmlFor={`resultado-${row.original._id}`}>
+            <Upload className='cursor-pointer h-4 w-4 m-auto' />
+            <Input className='hidden' type='file' accept='application/pdf' placeholder='Resultados' id={`resultado-${row.original._id}`} onChange={e => handleFileUpload(e, row.original, setIsLoading)} />
+          </label>
+        }
+      </div>
+    }
+  },
+  // {
+  //   id: 'download',
+  //   header: ({ table }) => (
+  //     <div className='flex flex-row'>
+  //       <span>Descargar resultados</span>
+  //     </div>
+  //   ),
+  //   size: 55,
+  //   maxSize: 60,
+  //   cell: ({ row }) => (
+  //     <div className=''>
+  //       <label htmlFor='resultado'>
+  //         <Upload className='cursor-pointer h-4 w-4 m-auto' />
+  //       </label>
+  //       <Input className='hidden' type='file' accept='application/pdf' placeholder='Resultados' id='resultado' onChange={e => handleFileUpload(e, row.original)} />
+  //     </div>
+  //   )
+  // }
 ]
 
 const AnalysisStatusTable = ({
@@ -87,6 +144,13 @@ const AnalysisStatusTable = ({
 }: {
   analysis: AnalysisStatus[]
 }) => {
+  const formRef = useRef<HTMLFormElement>(null);
+
+
+  const onSubmit = (formData: FormData) => {
+    console.log(formData);
+
+  }
   return (
     <div className='shadow-lg'>
       <DataTable columns={columns} data={analysis} />

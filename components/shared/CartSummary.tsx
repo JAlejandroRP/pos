@@ -15,7 +15,7 @@ import { User } from '@/lib/database/models/user.model';
 import { useToast } from '../ui/use-toast';
 import { Perfil } from '@/lib/database/models/perfil.model';
 import { Analysis } from '@/lib/database/models/analysis.model';
-import { insertAnalysisStatus } from '@/lib/actions/status.actions';
+import { upsertAnalysisStatus } from '@/lib/actions/status.actions';
 import { calculateSubtotal, calculateTax } from '@/lib/utils';
 import { newCart } from '@/lib/actions/cart.actions';
 
@@ -139,7 +139,7 @@ const CartSummary = ({ user, cart }: { user: User, cart: Cart }) => {
       user: user,
       isUrgent,
     }
-    const response = await insertAnalysisStatus(newStatus, pathname)
+    const response = await upsertAnalysisStatus(newStatus, pathname)
     if (!response.success)
       toast({
         title: 'Error',

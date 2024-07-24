@@ -122,7 +122,6 @@ const PerfilsItems = ({ perfils, date }: { perfils: Perfil[], date: Date }) => {
 const AnalysisItems = ({ analysis, date, isUrgent }: { analysis: Analysis[], date: Date, isUrgent: boolean }) => {
   if (analysis.length === 0) return <></>
   const types = getTypes(analysis)
-  console.log(types);
 
 
   const htmlItems = types.map((type, i) => {
@@ -146,7 +145,6 @@ const AnalysisSatusCard = ({ analysisStatus }: { analysisStatus: AnalysisStatus 
   }
   const subTotal = calculateSubtotal(temporalCart, analysisStatus.isUrgent);
   const total = Number(subTotal + calculateTax(subTotal));
-  console.log('status', analysisStatus);
 
 
   return (

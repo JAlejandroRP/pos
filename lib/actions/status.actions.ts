@@ -8,16 +8,18 @@ import { AnalysisStatus } from "../database/models/analysisStatus.model";
 const COLLECTION = 'analysisStatus'
 
 // CREATE
-export async function insertAnalysisStatus(newStatus: AnalysisStatus, pathname: string) {
+export async function upsertAnalysisStatus(newStatus: AnalysisStatus, pathname: string) {
   try {
     const db = await connectToDatabase();
     const status: Collection<AnalysisStatus> = db.collection(COLLECTION)
+    console.log(newStatus);
+    
 
     // createIndex(status, 'noIktan');
 
     const insertResponse = await status.updateOne(
       {
-        _id: newStatus._id || new ObjectId()
+        _id: new ObjectId(newStatus._id) || new ObjectId()
       },
       {
         "$set": {
@@ -58,54 +60,7 @@ async function createIndex(collection: Collection<AnalysisStatus>, field: string
   }
 }
 
-// // CREATE BULK
-// export async function insertAnalysisBulk(newAnalysis: Analysis[], pathname: string) {
-//   try {
-//     const db = await connectToDatabase();
-//     const Analysis: Collection<Analysis> = db.collection('Analysis')
-
-//     await createIndex(Analysis, 'noIktan');
-
-//     const insertOptions = { ordered: true };
-
-//     const insertBulkResponse = await Analysis.insertMany(newAnalysis, insertOptions)
-//     revalidatePath(pathname)
-//     return {
-//       success: true,
-//       data: JSON.parse(JSON.stringify(insertBulkResponse))
-//     }
-//   } catch (error: any) {
-//     console.log(error);
-//     return {
-//       success: false,
-//       error: error.errorResponse.message
-//     }
-//   }
-// }
-
-// // READ
-// export async function getPerfilsCount() {
-//   try {
-//     const db = await connectToDatabase();
-//     const collection = db.collection('Analysis');
-
-
-//     const Analysis = await collection.countDocuments({
-//       tests: { $exists: true, $ne: [] }
-//     });
-
-//     return {
-//       success: true,
-//       data: Analysis
-//     }
-//   } catch (error: any) {
-//     console.log(error);
-//     return {
-//       success: false,
-//       error: 'Error while getting count of documents' + error.toString() || error
-//     }
-//   }
-// }
+// // CRE
 // READ
 export async function getAnalysisStatusById(id: string) {
   try {
