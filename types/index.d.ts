@@ -45,7 +45,5 @@ declare type Cart = {
     analysis: Analysis[],
     perfils: Perfil[],
   },
-  // total: Number,
-  // subtotal: Number,
   tax: Number
 }

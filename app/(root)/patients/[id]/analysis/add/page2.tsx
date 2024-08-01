@@ -1,13 +1,19 @@
+import { Button } from '@/components/ui/button'
+import { MAX_RESULTS, MIN_PAGE } from '@/constants'
 import { getAllAnalysis, getAnalysisCount, getPerfilsCount } from '@/lib/actions/analysis.actions'
 import { getCart, newCart } from '@/lib/actions/cart.actions'
 import { getUserByMongoId } from '@/lib/actions/user.actions'
+import { ShoppingCart } from 'lucide-react'
+import Link from 'next/link'
 import React from 'react'
 import { redirect } from 'next/navigation'
 import ListItems from '@/components/shared/ListItems'
+import Search from '@/components/shared/Search'
 import Pagination from '@/components/shared/Pagination'
 import { getAllPerfils } from '@/lib/actions/perfil.actions'
-import { PatientData } from '@/components/shared/PatientData'
-import CreateAnalysysPerfilsPanel from '@/components/shared/CreateAnalysysPerfilsPanel'
+import { Label } from '@/components/ui/label'
+import ViewSelector from '@/components/shared/ViewSelector'
+import SelectAnalysisTable from '@/components/shared/SelectAnalysisTable'
 
 const AddAnalysisToCustomerPage = async ({
   params: { id },
@@ -46,17 +52,22 @@ const AddAnalysisToCustomerPage = async ({
   if (!cart) cart = await newCart()
   if (!user.success || !user.data) redirect('/patients')
 
+  const userAge = Math.abs(new Date(user.data.birthday).getFullYear() - new Date().getFullYear())
 
   return (
     <section>
-      <CreateAnalysysPerfilsPanel
-        analysis={searchParams.type === 'analysis' ? analysis : perfils}
-        query={query}
-        totalFilteredPages={totalFilteredPages}
-        totalPages={totalPages}
-        user={user.data}
-        userId={id}
-      />
+      <main>
+        <div className='max-w-2xl m-auto pt-4'>
+          <Search
+            underline
+            placeholder='Buscar analisis'
+          />
+          <SelectAnalysisTable analysis={analysis}/>
+          <Pagination
+            totalPages={query === '' ? totalPages : totalFilteredPages}
+          />
+        </div>
+      </main>
     </section >
   )
 }

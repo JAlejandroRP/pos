@@ -3,7 +3,7 @@ import React, { HTMLAttributes } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
 import { deleteAnalysis } from '@/lib/actions/analysis.actions'
-import { SearchIcon, Trash2 } from 'lucide-react'
+import { SearchIcon, Trash, Trash2 } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { AnalysisStatus } from '@/lib/database/models/analysisStatus.model'
 import { Badge } from '../ui/badge'
@@ -11,6 +11,7 @@ import { analysisStatus } from '@/constants'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import { Perfil } from '@/lib/database/models/perfil.model'
+import { deletePerfil } from '@/lib/actions/perfil.actions'
 
 const colorStatus = (status: string) => {
   if (status === analysisStatus.in_progress) {
@@ -45,6 +46,7 @@ export const columns: ColumnDef<Perfil>[] = [
   {
     accessorKey: "name",
     header: "Nombre perfil",
+    size: 100,
     maxSize: 70,
   },
   // {
@@ -54,10 +56,10 @@ export const columns: ColumnDef<Perfil>[] = [
   // },
   {
     maxSize: 30,
-    id: 'select-col',
+    minSize: 30,
+    size: 30,
+    id: 'detail',
     header: ({ table }) => {
-      // const rowsSelected = Object.keys(table.getState().rowSelection).length > 0;
-      // const pathname = usePathname()
       return (
         <div>
           Ver perfil
@@ -72,6 +74,49 @@ export const columns: ColumnDef<Perfil>[] = [
       </div>
     ),
   },
+  {
+    maxSize: 30,
+    minSize: 30,
+    size: 30,
+    id: 'delete',
+    header: ({ table }) => {
+      return (
+        <div>
+          Eliminar
+        </div>
+      )
+    },
+    cell: ({ row }) => (
+      <div className='flex flex-row max-w-sm justify-between w-12 m-auto '>
+        <label className='hover:cursor-pointer'
+          htmlFor="" onClick={() => { deletePerfil(row.original._id!, '/perfils')}}>
+          {/* <Link href={`/perfils/${row.original._id}`}> */}
+          <Trash className='h-4 w-4' />
+        </label>
+        {/* </Link> */}
+      </div>
+    ),
+  },
+  // {
+  //   maxSize: 30,
+  //   minSize: 30,
+  //   size:30,
+  //   id: 'select-col',
+  //   header: ({ table }) => {
+  //     return (
+  //       <div>
+  //         Modificar
+  //       </div>
+  //     )
+  //   },
+  //   cell: ({ row }) => (
+  //     <div className='flex flex-row max-w-sm justify-between w-12 m-auto'>
+  //       <Link href={`/perfils/${row.original._id}`}>
+  //         <SearchIcon className='h-4 w-4' />
+  //       </Link>
+  //     </div>
+  //   ),
+  // },
 ]
 
 const PerfilsTable = ({

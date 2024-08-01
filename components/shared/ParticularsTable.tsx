@@ -32,11 +32,6 @@ export const columns: ColumnDef<User>[] = [
     maxSize: 80,
   },
   {
-    accessorKey: "isParticular",
-    header: "Es Particular?",
-    maxSize: 80,
-  },
-  {
     accessorKey: "sex",
     header: "Genero",
     maxSize: 50,

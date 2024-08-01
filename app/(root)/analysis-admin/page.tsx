@@ -1,10 +1,11 @@
-import AnalysisTable from '@/components/shared/AnalysisTable'
+import AnalysisTable, { columns } from '@/components/shared/AnalysisTable'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React from 'react'
 import Search from '@/components/shared/Search';
 import Pagination from '@/components/shared/Pagination';
 import { getAllAnalysis, getAnalysisCount } from '@/lib/actions/analysis.actions';
+import { DataTable } from '@/components/ui/data-table';
 
 const AnalysisAdminPage = async ({
   searchParams,
@@ -48,13 +49,14 @@ const AnalysisAdminPage = async ({
         <Search placeholder="Buscar analisis..." />
       </div>
       <div className='mt-6'>
-        {analysis && <AnalysisTable
+        <DataTable columns={columns} data={analysis}/>
+        {/* {analysis && <AnalysisTable
           page={currentPage}
           resultsPerPage={resultsPerPage}
           totalRows={totalFilteredRows}
           search={query}
           analysis={analysis}
-        />}
+        />} */}
         <Pagination totalPages={query === '' ? totalPages : totalFilteredPages} />
       </div>
     </div>

@@ -1,16 +1,15 @@
 'use client'
-import React, { HTMLAttributes, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/ui/data-table'
-import { Upload } from 'lucide-react'
+import { ArrowBigRight, ArrowRight, Download, Upload } from 'lucide-react'
 import { AnalysisStatus } from '@/lib/database/models/analysisStatus.model'
 import { analysisStatus } from '@/constants'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import { Input } from '../ui/input'
-import { uploadAnalysisStatus, uploadPdf } from '@/lib/actions/gdrive.actions'
+import { sentEmail, uploadPdf } from '@/lib/actions/google.actions'
 import { upsertAnalysisStatus } from '@/lib/actions/status.actions'
-import { usePathname } from 'next/navigation'
 
 const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, status: AnalysisStatus, setIsLoading: Function) => {
   if (event.target.files) {
@@ -24,6 +23,7 @@ const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>, stat
       if (response.docId) {
         await upsertAnalysisStatus({
           ...status,
+          pdfUrl: `https://drive.google.com/uc?export=download&id=${response.docId}`,
           status: analysisStatus.completed
         }, '/analysis-status')
         setIsLoading(false)
@@ -58,16 +58,50 @@ const getPerfilUser = (status: AnalysisStatus) => {
   return ''
 }
 
+const ResultsHandler = ({ row }: { row: any }) => {
+  const [isLoading, setIsLoading] = useState(false)
+
+  if (row.original.status === analysisStatus.completed)
+    return <Link title='Descargar resultados' className='cursor-pointer' href={row.original.pdfUrl}>
+      <Download className='h-4 w-4 m-auto' />
+    </Link>
+
+  return <div className=''>
+    {isLoading ? 'Subiendo archivo...' :
+      <label htmlFor={`resultado-${row.original._id}`} title='Subir resultados'>
+        <Upload className='cursor-pointer h-4 w-4 m-auto' />
+        <Input className='hidden' type='file' accept='application/pdf' placeholder='Resultados' id={`resultado-${row.original._id}`} onChange={async (e) => {
+          await handleFileUpload(e, row.original, setIsLoading)
+        }} />
+      </label>
+    }
+  </div>
+}
+
+const handleDownload = (url: string) => {
+  if (url) {
+
+    const downloadUrl = url;
+    const link = document.createElement('a');
+
+    link.href = downloadUrl;
+    link.target = '_blank';
+    link.download = 'resultados.pdf'; // Puedes personalizar el nombre del archivo descargado
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
 export const columns: ColumnDef<AnalysisStatus>[] = [
   {
     accessorKey: "creationDate",
     header: "Fecha",
-    maxSize: 50,
+    minSize: 55,
     size: 50,
-    cell: ({ row }) => new Date(row.original.creationDate).toDateString()
+    cell: ({ row }) => new Date(row.original.creationDate).toLocaleDateString('en-US')
   },
   {
-    // accessorKey: "isUrgent",
     header: "Empresa",
     size: 50,
     minSize: 50,
@@ -95,48 +129,25 @@ export const columns: ColumnDef<AnalysisStatus>[] = [
     }
   },
   {
+    header: ({ table }) => <div className='m-auto w-full'>Descargar/Subir Resultados</div>,
     id: 'action-col',
-    // header: ({ table }) => (
-    //   <div className='flex flex-row'>
-    //     <span>Agregar resultado</span>
-    //   </div>
-    // ),
+    size: 55,
+    maxSize: 60,
+    cell: ({ row }) => <ResultsHandler row={row} />
+  },
+  {
+    header: ({ table }) => <div className='m-auto w-full'>Enviar resultados</div>,
+    id: 'sent',
     size: 55,
     maxSize: 60,
     cell: ({ row }) => {
-      const [isLoading, setIsLoading] = useState(false)
-
-      if(row.original.status === analysisStatus.completed)
-        return <span>Cambiar resultados</span>
-
-      return <div className=''>
-        {isLoading ? 'Subiendo archivo...' :
-          <label htmlFor={`resultado-${row.original._id}`}>
-            <Upload className='cursor-pointer h-4 w-4 m-auto' />
-            <Input className='hidden' type='file' accept='application/pdf' placeholder='Resultados' id={`resultado-${row.original._id}`} onChange={e => handleFileUpload(e, row.original, setIsLoading)} />
-          </label>
-        }
-      </div>
+      if (row.original.status === analysisStatus.completed)
+        return <div title='Enviar resultados' className='cursor-pointer'
+          onClick={async () => await sentEmail()}>
+          <ArrowRight className='h-4 w-4 m-auto' />
+        </div>
     }
   },
-  // {
-  //   id: 'download',
-  //   header: ({ table }) => (
-  //     <div className='flex flex-row'>
-  //       <span>Descargar resultados</span>
-  //     </div>
-  //   ),
-  //   size: 55,
-  //   maxSize: 60,
-  //   cell: ({ row }) => (
-  //     <div className=''>
-  //       <label htmlFor='resultado'>
-  //         <Upload className='cursor-pointer h-4 w-4 m-auto' />
-  //       </label>
-  //       <Input className='hidden' type='file' accept='application/pdf' placeholder='Resultados' id='resultado' onChange={e => handleFileUpload(e, row.original)} />
-  //     </div>
-  //   )
-  // }
 ]
 
 const AnalysisStatusTable = ({

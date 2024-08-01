@@ -22,7 +22,7 @@ const ViewSelector = () => {
   }
 
   useEffect(() => {
-    handleChange()
+    // handleChange()
   }, [ver])
 
   return (

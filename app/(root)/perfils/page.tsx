@@ -3,7 +3,7 @@ import React from 'react'
 import Pagination from '@/components/shared/Pagination';
 import AnalysisStatusTable from '@/components/shared/AnalysisStatusTable';
 import { getAllPerfils, getPerfilsCount } from '@/lib/actions/perfil.actions';
-import PerfilsTable from '@/components/shared/ParticularTable';
+import PerfilsTable from '@/components/shared/PerfilsTable';
 
 const AnalysisPage = async ({
   searchParams,

@@ -204,32 +204,33 @@ export async function getAllPerfils(path: string, page: number, resultsPerPage: 
   }
 }
 
-// // DELETE
-// export async function deleteAnalysis(ids: string[], pathname: string) {
-//   try {
-//     console.log('deleting...', ids);
+// DELETE
+export async function deletePerfil(id: ObjectId, pathname: string) {
+  try {
+    // console.log('deleting...', ids);
 
-//     const db = await connectToDatabase();
-//     const collection = db.collection('Analysis');
-//     const idsToDelete = stringToObjectId(ids);
+    const db = await connectToDatabase();
+    const collection = db.collection(COLLECTION);
+    // const idsToDelete = stringToObjectId(ids);
 
-//     const deleteResponse = await collection.deleteMany({ _id: { $in: idsToDelete } })
-//     console.log(deleteResponse);
+    // const deleteResponse = await collection.deleteMany({ _id: { $in: idsToDelete } })
+    const deleteResponse = await collection.deleteOne({ _id: new ObjectId(id) })
+    console.log(deleteResponse);
 
-//     revalidatePath(pathname)
+    revalidatePath(pathname)
 
-//     return {
-//       success: true,
-//       data: deleteResponse
-//     }
-//   } catch (error) {
-//     console.log(error);
-//     return {
-//       success: false,
-//       error: error
-//     }
-//   }
-// }
+    return {
+      success: true,
+      data: deleteResponse
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: error
+    }
+  }
+}
 
 // function stringToObjectId(ids: string[]) {
 //   return ids.map(id => new ObjectId(id))

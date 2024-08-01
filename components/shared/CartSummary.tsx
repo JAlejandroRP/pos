@@ -163,7 +163,7 @@ const CartSummary = ({ user, cart }: { user: User, cart: Cart }) => {
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
-    if (isCartEmpty() && isParticularNameEmpty()) return;
+    if (isCartEmpty() || isParticularNameEmpty()) return;
 
     if (user.isParticular) {
       await createNewPerfil()
@@ -218,26 +218,25 @@ const CartSummary = ({ user, cart }: { user: User, cart: Cart }) => {
             </div>
           </CardContent>
           <CardFooter className='flex flex-col'>
-            {user.isParticular &&
-              <div className='flex flex-row items-center justify-between w-full'>
-                <Label>
-                  Descripción*
-                </Label>
-                <Input
-                  onChange={(e) => setPerfilName(e.target.value)}
-                  className='ml-2'
-                  placeholder='Descripción/nombre'
-                >
-                </Input>
-              </div>}
-            <div className='flex items-center justify-between w-full mt-4'>
-              <label
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            {user.isParticular && <div className='flex flex-row items-center justify-between w-full'>
+              <Label>
+                Descripción*
+              </Label>
+              <Input
+                onChange={(e) => setPerfilName(e.target.value)}
+                className='ml-2'
+                placeholder='Descripción/nombre'
+              >
+              </Input>
+            </div>}
+            <div className='flex flex-row items-center justify-between w-full mt-4'>
+              {!user.isParticular && <label
+                className="text-sm w-40 font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                 htmlFor="isUrgent"
               >
                 Es urgente?
-              </label>
-              <input type='checkbox' id="isUrgent"
+              </label>}
+              {!user.isParticular && <input type='checkbox' id="isUrgent"
                 onChange={(e) => {
                   setIsUrgent(prev => !prev)
                   setSubtotal((prev: number) => {
@@ -252,11 +251,11 @@ const CartSummary = ({ user, cart }: { user: User, cart: Cart }) => {
                     }
                   })
                 }}
-                className='ml-4'
-              />
+                className='mx-4'
+              />}
               <Button
                 type='submit'
-                className="max-w-40 text-green-500 !hover:text-green-500"
+                className="w-full text-green-500 !hover:text-green-500"
                 variant={'outline'}>
                 Realizar pedido
               </Button>

@@ -6,22 +6,22 @@ import { Delete, Plus, ShoppingCart, X } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { useToast } from '../ui/use-toast'
 import { Perfil } from '@/lib/database/models/perfil.model'
 
 const AnalysisListItem = ({
   data,
-  cartHasItem,
   removeCartItem,
-  addCartItem
+  addCartItem,
+  selected
 }: {
   data: Analysis | Perfil
-  cartHasItem?: boolean,
   removeCartItem: Function,
   addCartItem: Function,
+  selected: Function
 }) => {
-  const pathname = usePathname()
+  // const [selected, setSelected] = useState(false)
   const Total = () => {
     if ((data as Analysis).costPublic)
       return <>
@@ -40,6 +40,7 @@ const AnalysisListItem = ({
     className: "success-toast",
   });
 
+
   return (
     <Card className="grid grid-cols-3 w-full mb-3 shadow-lg" >
       <CardContent
@@ -53,24 +54,27 @@ const AnalysisListItem = ({
         <span className="text-primary font-bold my-auto">
           $ <Total />
         </span>
-        <Link
+        <div
           className='max-w-10'
-          href={'#'}
         >
-          {cartHasItem ?
-            <Button size='sm' variant={'outline'} onClick={() => removeCartItem(data)} className='px-2 text-red-700'>
+          {selected(data) ?
+            <Button size='sm' variant={'outline'} onClick={() => {
+              removeCartItem(data)
+            }} className='px-2 text-red-700'>
               <X
                 className='h-4 w-4'
               />
             </Button> :
             <Button size="sm" variant='outline' className="text-green-400 my-auto px-2"
-              onClick={() => addCartItem(data)}
+              onClick={() => {
+                addCartItem(data)
+              }}
             >
               <Plus
                 className='h-4 w-4 '
               />
             </Button>}
-        </Link>
+        </div>
       </CardFooter>
     </Card>
   )
