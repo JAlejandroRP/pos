@@ -1,6 +1,5 @@
 "use client";
 import { Sheet, SheetClose, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { SignedIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -29,9 +28,7 @@ const MobileNav = ({ user }: { user: any }) => {
           <Label>Sislab</Label>
         </Link>
         <nav className="flex gap-6">
-          <SignedIn>
             <ModeToggle />
-            <UserButton />
             <Sheet>
               <SheetTrigger>
                 <Menu />
@@ -74,7 +71,6 @@ const MobileNav = ({ user }: { user: any }) => {
                 </>
               </SheetContent>
             </Sheet>
-          </SignedIn>
         </nav>
       </div>
     </div>

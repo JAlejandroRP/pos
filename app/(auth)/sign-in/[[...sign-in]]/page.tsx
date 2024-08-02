@@ -1,6 +1,5 @@
-import { SignIn } from '@clerk/nextjs'
+import SignIn from '@/components/shared/SignIn'
 import React from 'react'
-
 
 const SignInPage = () => {
   return (

@@ -1,6 +1,5 @@
-import { SignUp } from '@clerk/nextjs'
+import SignUp from '@/components/shared/SignUp'
 import React from 'react'
-
 
 const SignUnPage = () => {
   return (

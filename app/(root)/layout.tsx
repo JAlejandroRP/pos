@@ -1,8 +1,7 @@
 import MobileNav from '@/components/shared/MobileNav'
 import Sidebar from '@/components/shared/Sidebar'
 import { Toaster } from '@/components/ui/toaster'
-import { auth } from "@clerk/nextjs/server"
-import { getClerkCurrentUser } from '@/lib/actions/user.actions'
+import { getClerkCurrentUser, getUserByMongoId } from '@/lib/actions/user.actions'
 // import { currentUser } from '@clerk/nextjs/server';
 
 // import { getClerkCurrentUser } from '@/lib/actions/user.actions'
@@ -10,7 +9,7 @@ import { redirect } from 'next/navigation'
 import React from 'react'
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await getClerkCurrentUser();
+  const user = await getUserByMongoId('669176cd8c0ba70b799cad1d');
   // const user = await currentUser();
   // let user = {id: 1}
   
